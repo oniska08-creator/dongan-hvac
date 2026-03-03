@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Portfolio {
+  id         Int      @id @default(autoincrement())
+  title      String
+  clientName String   @default("")
+  area       String   @default("")
+  solution   String
+  date       String
+  imageUrl   String?
+  images     String[]
+  createdAt  DateTime @default(now())
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  category    String
+  features    String
+  description String   @default("")
+  imageUrl    String?
+  isVisible   Boolean  @default(true)
+  specs       Json?
+  createdAt   DateTime @default(now())
+}
+
+model Inquiry {
+  id           Int      @id @default(autoincrement())
+  customerName String
+  contact      String
+  area         String
+  status       String   @default("대기중")
+  content      String
+  createdAt    DateTime @default(now())
+}
+
+model VisitorLog {
+  id        Int      @id @default(autoincrement())
+  visitedAt DateTime @default(now())
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("ADMIN")
+  createdAt DateTime @default(now())
+}
