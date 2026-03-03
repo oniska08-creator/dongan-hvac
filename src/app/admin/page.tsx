@@ -3,6 +3,13 @@ import { Package, FolderKanban, MessageSquare, Users, ChevronRight, ImageOff } f
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 
+interface InquiryType {
+    id: string | number;
+    customerName: string;
+    area: string;
+    status: string;
+}
+
 export const revalidate = 0; // Dynamic rendering
 
 export default async function AdminDashboard() {
@@ -98,7 +105,7 @@ export default async function AdminDashboard() {
                         </Link>
                     </div>
                     <div className="divide-y divide-slate-100">
-                        {recentInquiries.map((inquiry) => (
+                        {recentInquiries.map((inquiry: InquiryType) => (
                             <div key={inquiry.id} className="px-6 py-4 flex justify-between items-center hover:bg-slate-50 transition-colors">
                                 <div>
                                     <div className="font-bold text-slate-900">{inquiry.customerName} 고객님</div>
