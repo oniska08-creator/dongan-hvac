@@ -10,6 +10,13 @@ interface InquiryType {
     status: string;
 }
 
+interface PortfolioType {
+    id: string | number;
+    imageUrl: string | null;
+    title: string;
+    date: string;
+}
+
 export const revalidate = 0; // Dynamic rendering
 
 export default async function AdminDashboard() {
@@ -131,7 +138,7 @@ export default async function AdminDashboard() {
                         </Link>
                     </div>
                     <div className="divide-y divide-slate-100">
-                        {recentPortfolios.map((portfolio) => (
+                        {recentPortfolios.map((portfolio: PortfolioType) => (
                             <div key={portfolio.id} className="px-6 py-4 flex items-center gap-4 hover:bg-slate-50 transition-colors">
                                 {portfolio.imageUrl ? (
                                     <img src={portfolio.imageUrl} className="w-16 h-12 object-cover rounded shadow-sm flex-shrink-0" alt="thumb" />

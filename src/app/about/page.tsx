@@ -2,6 +2,11 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Menu } from "lucide-react";
+// 1. 설계도(타입) 지정
+interface InquiryType {
+    id: string | number;
+    customerName: string;
+}
 
 export default function AboutPage() {
     const milestones = [
