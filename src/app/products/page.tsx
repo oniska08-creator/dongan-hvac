@@ -3,7 +3,7 @@ import { Menu, ImageOff } from "lucide-react";
 import prisma from "@/lib/prisma";
 import ProductCategoryRow from "./ProductCategoryRow";
 
-export const revalidate = 0;
+export const revalidate = 60; // 60초 주기로 백그라운드에서 캐시 갱신 (ISR)
 
 export default async function ProductsPage() {
     const products = await prisma.product.findMany({

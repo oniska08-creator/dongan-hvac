@@ -1,9 +1,8 @@
 import prisma from '@/lib/prisma';
 import ClientHome from './ClientHome';
 
-// Ensure this page runs on the server
-export const revalidate = 0; // Disable static caching so data is fresh
-
+// Enabled ISR: Revalidate every 60 seconds to dramatically reduce TTFB cache miss latency global performance
+export const revalidate = 60;
 export default async function Page() {
     const products = await prisma.product.findMany({
         where: { isVisible: true },
