@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Menu, ImageOff } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 
@@ -120,14 +121,21 @@ export default function ClientHome({ products, portfolios }: { products: any[], 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {products.map((product) => (
               <Link key={product.id} href="/products" className="group rounded-2xl overflow-hidden bg-slate-800/50 border border-slate-700 backdrop-blur-sm block">
-                <div className="h-64 w-full overflow-hidden">
+                <div className="h-64 w-full overflow-hidden relative">
                   {product.imageUrl ? (
-                    <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out" />
+                    <Image
+                      src={product.imageUrl}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                    />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-800 transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                    <div className="w-full h-full absolute inset-0 flex items-center justify-center bg-gray-800 transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
                       <ImageOff className="text-gray-500" size={48} />
                     </div>
-                  )}</div>
+                  )}
+                </div>
                 <div className="p-6">
                   <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-cyan-400 transition-colors">{product.name}</h3>
                   <p className="text-slate-400 text-sm break-keep">{product.features}</p>
@@ -161,11 +169,17 @@ export default function ClientHome({ products, portfolios }: { products: any[], 
                 ];
                 const roundedClass = roundedClasses[idx % 4];
                 return (
-                  <Link key={item.id} href="/portfolio" className={`block ${roundedClass} overflow-hidden h-full w-full cursor-pointer group`}>
+                  <Link key={item.id} href="/portfolio" className={`block ${roundedClass} overflow-hidden h-full w-full cursor-pointer group relative`}>
                     {item.imageUrl || (item.images && item.images.length > 0) ? (
-                      <img src={item.imageUrl || item.images[0]} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={item.title} />
+                      <Image
+                        src={item.imageUrl || item.images[0]}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
                     ) : (
-                      <div className="w-full h-full bg-slate-800 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                      <div className="absolute inset-0 w-full h-full bg-slate-800 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
                         <ImageOff className="text-slate-600 w-12 h-12" />
                       </div>
                     )}

@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ImageOff, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ProductRowProps {
@@ -121,11 +122,13 @@ export default function ProductCategoryRow({ category, items }: ProductRowProps)
                                 onDragStart={(e) => e.preventDefault()}
                             >
                                 {product.imageUrl ? (
-                                    // Pointer events none prevents the image from being dragged as a native ghost element
-                                    <img
+                                    // next/image 적용. aspect-square 내부이므로 fill 사용.
+                                    <Image
                                         src={product.imageUrl}
                                         alt={product.name}
-                                        className="w-full h-full object-contain group-hover/card:scale-110 transition-transform duration-700 ease-out pointer-events-none"
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, 280px"
+                                        className="object-contain group-hover/card:scale-110 transition-transform duration-700 ease-out pointer-events-none p-4"
                                         draggable={false}
                                         onDragStart={(e) => e.preventDefault()}
                                     />

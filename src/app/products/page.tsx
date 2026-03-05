@@ -17,15 +17,15 @@ export default async function ProductsPage() {
             imageUrl: true,
         },
         orderBy: { createdAt: 'desc' },
-        // 2. 강제 데이터 개수 제한 (한 번에 12개까지만)
-        take: 12
+        // [Blob 도입 완료] Base64가 더 이상 없고 오직 인터넷 URL만 남으므로 넉넉하게 30개로 복구
+        take: 30
     });
 
-    // 3. RSC 페이로드(ISR 캐시 파일) 용량 폭발을 막기 위한 극한의 후처리 (Base64 제거 및 텍스트 자르기)
+    // 3. RSC 페이로드(ISR 캐시 파일) 용량 관리를 하면서, 이미지는 복구
     const optimizedProducts = rawProducts.map((p) => {
-        // 만약 imageUrl이 Base64 텍스트로 인코딩되어 엄청난 용량을 차지한다면 null 처리 (썸네일 미지원 처리)
-        const isBase64Image = p.imageUrl && p.imageUrl.startsWith('data:image');
-        const safeImageUrl = isBase64Image ? null : p.imageUrl;
+        // [핵심 포인트] 과거에 남아있을지 모르는 Base64 쓰레기 데이터를 걸러내고, 'http'가 포함된 Vercel Blob 정상 URL만 통과시킵니다.
+        const isValidUrl = p.imageUrl && p.imageUrl.startsWith('https://');
+        const safeImageUrl = isValidUrl ? p.imageUrl : null;
 
         // features 텍스트 내에 숨겨진 이미지나 너무 긴 텍스트가 있을 수 있으므로 100자로 잘라냄
         let safeFeatures = p.features || "";
@@ -37,7 +37,7 @@ export default async function ProductsPage() {
             id: p.id,
             name: p.name,
             category: p.category,
-            imageUrl: safeImageUrl,
+            imageUrl: safeImageUrl, // 검증된 안전한 URL
             features: safeFeatures
         };
     });

@@ -7,6 +7,8 @@ export default function AdminPortfolioPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [formData, setFormData] = useState({ title: '', clientName: '', area: '', solution: '', date: '', img: '', images: [] as string[] });
+    const [imgFiles, setImgFiles] = useState<{ file: File, tempUrl: string }[]>([]); // 업로드 대기 중인 실제 파일 및 미리보기 URL
+    const [isSaving, setIsSaving] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Pagination State
@@ -43,24 +45,11 @@ export default function AdminPortfolioPage() {
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         if (files.length > 0) {
-            const newImages: string[] = [];
-            let loadedCount = 0;
-
-            files.forEach((file) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    newImages.push(reader.result as string);
-                    loadedCount++;
-                    if (loadedCount === files.length) {
-                        setFormData((prev) => ({
-                            ...prev,
-                            img: prev.img || newImages[0], // Keep first image as main thumbnail
-                            images: [...prev.images, ...newImages]
-                        }));
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
+            const newFileObjects = files.map(file => ({
+                file,
+                tempUrl: URL.createObjectURL(file)
+            }));
+            setImgFiles((prev) => [...prev, ...newFileObjects]);
         }
     };
 
@@ -80,27 +69,52 @@ export default function AdminPortfolioPage() {
             setEditingId(null);
             setFormData({ title: '', clientName: '', area: '', solution: '', date: '', img: '', images: [] as string[] });
         }
+        setImgFiles([]);
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setEditingId(null);
+        setImgFiles([]);
         setFormData({ title: '', clientName: '', area: '', solution: '', date: '', img: '', images: [] as string[] });
     };
 
     const handleSave = async () => {
-        const payload = {
-            title: formData.title,
-            clientName: formData.clientName,
-            area: formData.area,
-            solution: formData.solution,
-            date: formData.date,
-            imageUrl: formData.img,
-            images: formData.images,
-        };
+        setIsSaving(true);
+        let finalImages = [...formData.images]; // 기존 Vercel URL들 유지
 
         try {
+            // 새로 추가된 파일이 있다면 순차적으로 Vercel Blob에 업로드
+            if (imgFiles.length > 0) {
+                for (const fileObj of imgFiles) {
+                    const uploadForm = new FormData();
+                    uploadForm.append('file', fileObj.file);
+
+                    const uploadRes = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: uploadForm
+                    });
+
+                    if (uploadRes.ok) {
+                        const blobData = await uploadRes.json();
+                        finalImages.push(blobData.url); // 새로 발급받은 Blob URL 추가
+                    } else {
+                        throw new Error('Upload to Blob failed');
+                    }
+                }
+            }
+
+            const payload = {
+                title: formData.title,
+                clientName: formData.clientName,
+                area: formData.area,
+                solution: formData.solution,
+                date: formData.date,
+                imageUrl: finalImages.length > 0 ? finalImages[0] : "", // 첫 번째 이미지를 썸네일로 사용
+                images: finalImages,
+            };
+
             if (editingId) {
                 await fetch(`/api/portfolio/${editingId}`, {
                     method: 'PUT',
@@ -118,6 +132,9 @@ export default function AdminPortfolioPage() {
             closeModal();
         } catch (error) {
             console.error("Failed to save portfolio:", error);
+            alert("저장에 실패했습니다. 이미지가 너무 크거나 Vercel 인증 문제가 있을 수 있습니다.");
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -312,28 +329,30 @@ export default function AdminPortfolioPage() {
                                 <div>
                                     <label className="block text-sm font-bold text-slate-700 mb-2">다중 이미지 갤러리 관리</label>
 
-                                    {formData.images && formData.images.length > 0 && (
+                                    {(formData.images.length > 0 || imgFiles.length > 0) && (
                                         <div className="mb-4">
-                                            <div className="text-xs text-slate-500 mb-2">현재 이미지 미리보기 ({formData.images.length}장)</div>
+                                            <div className="text-xs text-slate-500 mb-2">현재 이미지 미리보기 (기존: {formData.images.length} / 신규 추가: {imgFiles.length})</div>
                                             <div className="flex gap-3 overflow-x-auto pb-2">
+                                                {/* 기존 서버에 등록된 URL 이미지들 */}
                                                 {formData.images.map((imgSrc, idx) => (
-                                                    <div key={idx} className="relative flex-shrink-0">
-                                                        <img
-                                                            src={imgSrc}
-                                                            alt={`미리보기 ${idx + 1}`}
-                                                            className="w-24 h-24 object-cover rounded-lg border border-slate-200 shadow-sm"
-                                                        />
+                                                    <div key={`old-${idx}`} className="relative flex-shrink-0">
+                                                        <img src={imgSrc} alt={`기존 ${idx + 1}`} className="w-24 h-24 object-cover rounded-lg border border-slate-200 shadow-sm" />
                                                         <button
                                                             type="button"
-                                                            onClick={() => {
-                                                                const newImages = [...formData.images];
-                                                                newImages.splice(idx, 1);
-                                                                setFormData({ ...formData, images: newImages, img: newImages[0] || '' });
-                                                            }}
+                                                            onClick={() => setFormData({ ...formData, images: formData.images.filter((_, i) => i !== idx) })}
                                                             className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow hover:bg-red-600 transition-colors"
-                                                        >
-                                                            ✕
-                                                        </button>
+                                                        >✕</button>
+                                                    </div>
+                                                ))}
+                                                {/* 방금 클라이언트에서 선택한 신규 이미지들 */}
+                                                {imgFiles.map((fileObj, idx) => (
+                                                    <div key={`new-${idx}`} className="relative flex-shrink-0">
+                                                        <img src={fileObj.tempUrl} alt={`신규 ${idx + 1}`} className="w-24 h-24 object-cover rounded-lg border-2 border-cyan-400 shadow-sm" />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setImgFiles(prev => prev.filter((_, i) => i !== idx))}
+                                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow hover:bg-red-600 transition-colors"
+                                                        >✕</button>
                                                     </div>
                                                 ))}
                                             </div>
@@ -351,7 +370,7 @@ export default function AdminPortfolioPage() {
 
                                         <button
                                             type="button"
-                                            onClick={() => setFormData({ ...formData, img: '', images: [] })}
+                                            onClick={() => { setFormData({ ...formData, img: '', images: [] }); setImgFiles([]); }}
                                             className="px-4 py-2 text-sm font-bold text-red-500 border border-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
                                         >
                                             전체 삭제
@@ -374,14 +393,16 @@ export default function AdminPortfolioPage() {
                             <button
                                 type="submit"
                                 form="portfolioForm"
-                                className="px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer"
+                                disabled={isSaving}
+                                className="px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer disabled:bg-slate-400"
                             >
-                                저장
+                                {isSaving ? '저장 중...' : '저장'}
                             </button>
                             <button
                                 type="button"
                                 onClick={closeModal}
-                                className="px-6 py-2.5 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors cursor-pointer shadow-sm"
+                                disabled={isSaving}
+                                className="px-6 py-2.5 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors cursor-pointer shadow-sm disabled:cursor-not-allowed"
                             >
                                 취소
                             </button>

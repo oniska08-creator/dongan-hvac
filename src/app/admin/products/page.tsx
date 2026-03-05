@@ -7,6 +7,8 @@ export default function AdminProductsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [formData, setFormData] = useState({ title: '', category: '상업용', features: '', description: '', isVisible: true, img: '', specs: [] as { key: string, value: string }[] });
+    const [imgFile, setImgFile] = useState<File | null>(null); // 새로 추가된 파일 상태
+    const [isSaving, setIsSaving] = useState(false); // 저장 진행 상태
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Pagination State
@@ -43,11 +45,8 @@ export default function AdminProductsPage() {
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData({ ...formData, img: reader.result as string });
-            };
-            reader.readAsDataURL(file);
+            setImgFile(file); // 실제 File 객체 보관 (DB 대신 Blob에 업로드할 용도)
+            setFormData({ ...formData, img: URL.createObjectURL(file) }); // 미리보기용 임시 브라우저 URL
         }
     };
 
@@ -59,27 +58,53 @@ export default function AdminProductsPage() {
             setEditingId(null);
             setFormData({ title: '', category: '상업용', features: '', description: '', isVisible: true, img: '', specs: [] });
         }
+        setImgFile(null); // 모달 열 때 파일 상태 초기화
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setEditingId(null);
+        setImgFile(null);
         setFormData({ title: '', category: '상업용', features: '', description: '', isVisible: true, img: '', specs: [] });
     };
 
     const handleSave = async () => {
-        const payload = {
-            name: formData.title,
-            category: formData.category,
-            features: formData.features,
-            description: formData.description,
-            isVisible: formData.isVisible,
-            imageUrl: formData.img,
-            specs: formData.specs
-        };
+        setIsSaving(true);
+        let finalImageUrl = formData.img; // 명시적으로 삭제했거나, 기존 Vercel URL이면 이 값을 유지
 
         try {
+            // 새 파일이 선택되었을 경우에만 Blob 서버에 먼저 전송 (Base64 하드코딩 완전 금지)
+            if (imgFile) {
+                const uploadForm = new FormData();
+                uploadForm.append('file', imgFile);
+
+                const uploadRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: uploadForm
+                });
+
+                if (uploadRes.ok) {
+                    const blobData = await uploadRes.json();
+                    finalImageUrl = blobData.url; // Blob에서 발급된 짧은 인터넷 주소(.vercel-storage.com)
+                } else {
+                    console.error("Vercel Blob Upload failed");
+                    alert("이미지 업로드에 실패했습니다. (Vercel 환경 변수 세팅 확인)");
+                    setIsSaving(false);
+                    return;
+                }
+            }
+
+            const payload = {
+                name: formData.title,
+                category: formData.category,
+                features: formData.features,
+                description: formData.description,
+                isVisible: formData.isVisible,
+                imageUrl: finalImageUrl,
+                specs: formData.specs
+            };
+
             if (editingId) {
                 await fetch(`/api/products/${editingId}`, {
                     method: 'PUT',
@@ -97,6 +122,9 @@ export default function AdminProductsPage() {
             closeModal();
         } catch (error) {
             console.error("Failed to save product:", error);
+            alert("저장에 실패했습니다.");
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -392,7 +420,7 @@ export default function AdminProductsPage() {
 
                                         <button
                                             type="button"
-                                            onClick={() => setFormData({ ...formData, img: '' })}
+                                            onClick={() => { setFormData({ ...formData, img: '' }); setImgFile(null); }}
                                             className="px-4 py-2 text-sm font-bold text-red-500 border border-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
                                         >
                                             이미지 삭제
@@ -414,14 +442,16 @@ export default function AdminProductsPage() {
                             <button
                                 type="submit"
                                 form="productForm"
-                                className="px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer"
+                                disabled={isSaving}
+                                className="px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer disabled:bg-slate-400"
                             >
-                                저장
+                                {isSaving ? "저장 중..." : "저장"}
                             </button>
                             <button
                                 type="button"
                                 onClick={closeModal}
-                                className="px-6 py-2.5 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors cursor-pointer shadow-sm"
+                                disabled={isSaving}
+                                className="px-6 py-2.5 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors cursor-pointer shadow-sm disabled:cursor-not-allowed"
                             >
                                 취소
                             </button>

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Menu, Plus, ImageOff } from "lucide-react";
 
+import Image from "next/image";
+
 export default function ClientPortfolio({ portfolios: dbPortfolios }: { portfolios: any[] }) {
     const dataList = dbPortfolios || [];
 
@@ -18,12 +20,14 @@ export default function ClientPortfolio({ portfolios: dbPortfolios }: { portfoli
     const renderCardContent = (item: any) => (
         <div className="group flex flex-col w-full h-full cursor-pointer">
             {/* Image Container (16:9 ratio) */}
-            <div className="w-full aspect-video relative overflow-hidden rounded-2xl shadow-lg border border-slate-800/60 bg-slate-900">
+            <div className="w-full aspect-video relative overflow-hidden rounded-2xl shadow-lg border border-slate-800/60 bg-slate-900 leading-none">
                 {item.imageUrl ? (
-                    <img
+                    <Image
                         src={item.imageUrl}
                         alt={item.title}
-                        className="object-cover w-full h-full absolute inset-0 transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-in-out block"
                     />
                 ) : (
                     <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-slate-800 text-slate-500 transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-in-out">

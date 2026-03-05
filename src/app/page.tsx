@@ -29,16 +29,16 @@ export default async function Page() {
         take: 4
     });
 
-    // RSC Payload (ISR 캐시) 용량 초과 에러 방지를 위한 Base64 및 장문 텍스트 강제 필터링
+    // RSC Payload (ISR 캐시) 용량 관리를 하면서, Blob의 인터넷 주소만 통과시킴 (과거 쓰레기 Data 차단)
     const products = rawProducts.map(p => ({
         ...p,
-        imageUrl: p.imageUrl?.startsWith('data:image') ? null : p.imageUrl,
+        imageUrl: (p.imageUrl && p.imageUrl.startsWith('https://')) ? p.imageUrl : null,
         features: (p.features && p.features.length > 100) ? p.features.substring(0, 100) + '...' : p.features
     }));
 
     const portfolios = rawPortfolios.map(p => ({
         ...p,
-        imageUrl: p.imageUrl?.startsWith('data:image') ? null : p.imageUrl
+        imageUrl: (p.imageUrl && p.imageUrl.startsWith('https://')) ? p.imageUrl : null
     }));
 
     return <ClientHome products={products} portfolios={portfolios} />;

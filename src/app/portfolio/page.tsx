@@ -15,15 +15,15 @@ export default async function PortfolioPage() {
             solution: true,
             date: true,
             imageUrl: true,
-            // images 배열은 용량이 클 수 있으므로 목록 뷰에서는 제외
+            // images 배열은 여러 장의 Blob URL이 포함될 수 있어 목록에선 제외하지만, 스토리지 기반이므로 개수는 대폭 늘릴 수 있음
         },
-        take: 20
+        take: 40
     });
 
-    // 2. Base64 이미지로 인한 ISR Payload 터짐 방지
+    // 2. Vercel Blob 스토리지 URL 만 통과시키고, 과거의 Base64 데이터가 섞여있다면 null 처리하여 에러 방지
     const portfolios = rawPortfolios.map(p => ({
         ...p,
-        imageUrl: p.imageUrl?.startsWith('data:image') ? null : p.imageUrl
+        imageUrl: (p.imageUrl && p.imageUrl.startsWith('https://')) ? p.imageUrl : null
     }));
 
     return <ClientPortfolio portfolios={portfolios} />;
