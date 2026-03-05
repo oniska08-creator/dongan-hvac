@@ -6,23 +6,44 @@ import ProductCategoryRow from "./ProductCategoryRow";
 export const revalidate = 60; // 60초 주기로 백그라운드에서 캐시 갱신 (ISR)
 
 export default async function ProductsPage() {
-    const products = await prisma.product.findMany({
+    const rawProducts = await prisma.product.findMany({
         where: { isVisible: true },
-        // 1. 강제 최적화: 리스트 뷰를 그릴 때 필요한 최소한의 필드만 가져와서 페이로드 극대화
+        // 1. 필수 필드만 Select (description, specs 등 무거운 데이터 제외)
         select: {
             id: true,
             name: true,
             category: true,
-            imageUrl: true
-            // description, features, specs 등 용량이 큰 필드는 절대 가져오지 않음
+            features: true,
+            imageUrl: true,
         },
         orderBy: { createdAt: 'desc' },
-        // 2. 강제 최적화: 무조건 최대 12개만 불러옴 (필요시 프론트단에서 Infinite Scroll 등으로 추가 요청)
+        // 2. 강제 데이터 개수 제한 (한 번에 12개까지만)
         take: 12
     });
 
-    // 카테고리별 그룹화 로직
-    const groupedProducts = products.reduce((acc: any, product: any) => {
+    // 3. RSC 페이로드(ISR 캐시 파일) 용량 폭발을 막기 위한 극한의 후처리 (Base64 제거 및 텍스트 자르기)
+    const optimizedProducts = rawProducts.map((p) => {
+        // 만약 imageUrl이 Base64 텍스트로 인코딩되어 엄청난 용량을 차지한다면 null 처리 (썸네일 미지원 처리)
+        const isBase64Image = p.imageUrl && p.imageUrl.startsWith('data:image');
+        const safeImageUrl = isBase64Image ? null : p.imageUrl;
+
+        // features 텍스트 내에 숨겨진 이미지나 너무 긴 텍스트가 있을 수 있으므로 100자로 잘라냄
+        let safeFeatures = p.features || "";
+        if (safeFeatures.length > 100) {
+            safeFeatures = safeFeatures.substring(0, 100) + '...';
+        }
+
+        return {
+            id: p.id,
+            name: p.name,
+            category: p.category,
+            imageUrl: safeImageUrl,
+            features: safeFeatures
+        };
+    });
+
+    // 카테고리별 그룹화 로직 (사전 최적화된 데이터 사용)
+    const groupedProducts = optimizedProducts.reduce((acc: any, product: any) => {
         const category = product.category || '기타 제품';
         if (!acc[category]) acc[category] = [];
         acc[category].push(product);
