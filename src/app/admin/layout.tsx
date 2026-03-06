@@ -33,10 +33,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </div>
 
                 <nav className="flex-1 px-4 py-6 space-y-2">
-                    <Link href="/admin" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>대시보드</Link>
-                    <Link href="/admin/products" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/products' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>제품 관리</Link>
-                    <Link href="/admin/portfolio" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/portfolio' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>시공사례 관리</Link>
-                    <Link href="/admin/inquiries" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/inquiries' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>문의 내역</Link>
+                    <Link prefetch={true} href="/admin" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>대시보드</Link>
+                    <Link prefetch={true} href="/admin/products" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/products' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>제품 관리</Link>
+                    <Link prefetch={true} href="/admin/portfolio" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/portfolio' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>시공사례 관리</Link>
+                    <Link prefetch={true} href="/admin/inquiries" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/inquiries' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>문의 내역</Link>
                 </nav>
 
                 <div className="p-4 border-t border-slate-800 mt-auto">
