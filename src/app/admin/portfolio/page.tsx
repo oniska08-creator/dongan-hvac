@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
 import { ImageOff } from 'lucide-react';
+import imageCompression from 'browser-image-compression';
 
 export default function AdminPortfolioPage() {
     const [items, setItems] = useState<any[]>([]);
@@ -85,11 +86,30 @@ export default function AdminPortfolioPage() {
         let finalImages = [...formData.images]; // 기존 Vercel URL들 유지
 
         try {
-            // 새로 추가된 파일이 있다면 순차적으로 Vercel Blob에 업로드
             if (imgFiles.length > 0) {
+                const compressedFiles: File[] = [];
+
+                // 1. 순차적(Sequential) 압축: 브라우저 CPU 스로틀링 및 프리징 완벽 방지
                 for (const fileObj of imgFiles) {
+                    const options = {
+                        maxSizeMB: 0.5,           // 최대 500KB 이하로 최적화
+                        maxWidthOrHeight: 1200,   // 가로 최대 1200px
+                        useWebWorker: true        // 웹 워커로 메인 스레드 부하 분산
+                    };
+
+                    try {
+                        const compressedFile = await imageCompression(fileObj.file, options);
+                        compressedFiles.push(compressedFile);
+                    } catch (error) {
+                        console.error('Image compression failed', error);
+                        throw error;
+                    }
+                }
+
+                // 2. 가벼워진 파일들을 Vercel API로 업로드할 때는 네트워크 바운드이므로 병렬(Parallel) 처리
+                const uploadPromises = compressedFiles.map(async (compressedFile) => {
                     const uploadForm = new FormData();
-                    uploadForm.append('file', fileObj.file);
+                    uploadForm.append('file', compressedFile);
 
                     const uploadRes = await fetch('/api/upload', {
                         method: 'POST',
@@ -98,11 +118,15 @@ export default function AdminPortfolioPage() {
 
                     if (uploadRes.ok) {
                         const blobData = await uploadRes.json();
-                        finalImages.push(blobData.url); // 새로 발급받은 Blob URL 추가
+                        return blobData.url;
                     } else {
                         throw new Error('Upload to Blob failed');
                     }
-                }
+                });
+
+                // 네트워크 업로드만 병렬로 동시에 실행
+                const newImageUrls = await Promise.all(uploadPromises);
+                finalImages = [...finalImages, ...newImageUrls];
             }
 
             const payload = {

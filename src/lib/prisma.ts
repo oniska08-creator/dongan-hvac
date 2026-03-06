@@ -3,11 +3,16 @@ import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 const connectionString = process.env.DATABASE_URL
+const pool = new Pool({ connectionString })
+const adapter = new PrismaPg(pool)
 
 const prismaClientSingleton = () => {
-    const pool = new Pool({ connectionString })
-    const adapter = new PrismaPg(pool)
-    return new PrismaClient({ adapter })
+    return new PrismaClient({
+        adapter,
+        log: [
+            { emit: 'stdout', level: 'query' }
+        ]
+    })
 }
 
 declare const globalThis: {

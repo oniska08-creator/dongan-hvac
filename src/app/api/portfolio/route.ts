@@ -4,7 +4,18 @@ import prisma from '@/lib/prisma';
 export async function GET() {
     try {
         const portfolios = await prisma.portfolio.findMany({
-            orderBy: { createdAt: 'desc' }
+            take: 20,
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                title: true,
+                clientName: true,
+                area: true,
+                solution: true,
+                images: true,
+                date: true,
+                imageUrl: true
+            }
         });
         return NextResponse.json(portfolios);
     } catch (error) {
