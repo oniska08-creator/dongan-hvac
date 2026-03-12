@@ -3,6 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ImageOff } from 'lucide-react';
 import imageCompression from 'browser-image-compression';
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminPortfolioPage() {
     const [items, setItems] = useState<any[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,7 +55,7 @@ export default function AdminPortfolioPage() {
                 tempUrl: URL.createObjectURL(file),
                 isUploading: true
             }));
-            
+
             // UI에 업로드 중인 임시 이미지 표시
             setImgFiles((prev) => [...prev, ...newFileObjects]);
 
@@ -86,10 +88,10 @@ export default function AdminPortfolioPage() {
                 });
 
                 const newImageUrls = await Promise.all(uploadPromises);
-                
+
                 // 업로드 완료 후 실제 URL을 formData에 추가
                 setFormData(prev => ({ ...prev, images: [...prev.images, ...newImageUrls] }));
-                
+
                 // 임시 이미지(업로드 중 상태) 제거
                 setImgFiles(prev => prev.filter(f => !newFileObjects.includes(f)));
 
@@ -438,14 +440,14 @@ export default function AdminPortfolioPage() {
 
                         {/* Sticky Footer */}
                         <div className="p-6 border-t border-slate-200 bg-slate-50 sticky bottom-0 z-10 flex items-center justify-end gap-3">
-                                <button
-                                    type="submit"
-                                    form="portfolioForm"
-                                    disabled={isSaving || isUploading}
-                                    className="px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer disabled:bg-slate-400"
-                                >
-                                    {isSaving ? (progressText || '저장 중...') : isUploading ? '이미지 업로드 중...' : '저장'}
-                                </button>
+                            <button
+                                type="submit"
+                                form="portfolioForm"
+                                disabled={isSaving || isUploading}
+                                className="px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer disabled:bg-slate-400"
+                            >
+                                {isSaving ? (progressText || '저장 중...') : isUploading ? '이미지 업로드 중...' : '저장'}
+                            </button>
                             <button
                                 type="button"
                                 onClick={closeModal}
