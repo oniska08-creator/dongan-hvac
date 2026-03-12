@@ -1,7 +1,8 @@
 import prisma from '@/lib/prisma';
 import ClientPortfolio from './ClientPortfolio';
 
-export const revalidate = 60; // 60초 주기로 백그라운드에서 캐시 갱신 (ISR)
+export const dynamic = 'force-dynamic';
+//export const revalidate = 60; // 60초 주기로 백그라운드에서 캐시 갱신 (ISR)
 
 export default async function PortfolioPage() {
     // 1. 최소 필드만 조회 (이미지 배열이나 큰 용량 데이터 제외)
