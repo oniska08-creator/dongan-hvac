@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function LoginPage() {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
@@ -18,7 +18,7 @@ export default function LoginPage() {
         try {
             const res = await signIn('credentials', {
                 redirect: false,
-                email,
+                username,
                 password
             });
 
@@ -55,14 +55,14 @@ export default function LoginPage() {
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">이메일 (Email ID)</label>
+                        <label className="block text-sm font-semibold text-slate-300 mb-2">관리자 아이디 (Username)</label>
                         <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             required
                             className="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder-slate-500"
-                            placeholder="admin@example.com"
+                            placeholder="admin_id"
                         />
                     </div>
                     <div>
@@ -87,7 +87,6 @@ export default function LoginPage() {
                         </button>
                         <div className="text-center text-sm text-slate-400 flex flex-col gap-2">
                             <span><Link href="/" className="hover:text-cyan-300 transition-colors">홈페이지로 돌아가기</Link></span>
-                            <span className="text-xs text-slate-500 mt-4 border-t border-slate-700 pt-4">시스템을 처음 설정하시나요? <Link href="/register" className="text-cyan-400 hover:text-cyan-300 ml-1">계정 등록</Link></span>
                         </div>
                     </div>
                 </form>

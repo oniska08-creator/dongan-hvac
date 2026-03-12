@@ -95,9 +95,9 @@ export default function ProductCategoryRow({ category, items }: ProductRowProps)
                     onMouseLeave={handleMouseLeave}
                     onMouseUp={handleMouseUp}
                     onMouseMove={handleMouseMove}
-                    className={`flex flex-row overflow-x-auto flex-nowrap gap-6 pb-8 pt-4 select-none
+                    className={`flex flex-col md:flex-row overflow-y-visible md:overflow-x-auto md:flex-nowrap gap-6 pb-8 pt-4 select-none
                     [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]
-                    ${isDragging ? 'cursor-grabbing snap-none scroll-auto' : 'cursor-grab snap-x snap-mandatory scroll-smooth'}`}
+                    ${isDragging ? 'md:cursor-grabbing snap-none scroll-auto' : 'md:cursor-grab md:snap-x md:snap-mandatory scroll-smooth'}`}
                 >
                     {items.map((product: any) => (
                         <Link
@@ -107,7 +107,7 @@ export default function ProductCategoryRow({ category, items }: ProductRowProps)
                             onDragStart={(e) => e.preventDefault()}
                             // 절대 규격 강제 고정 (w-[280px] shrink-0)
                             // 드래그 중에는 hover 효과들을 잠시 비활성화하거나 클릭 이벤트를 방지하려면 추가 로직 가능하지만 기존 유지
-                            className="block w-[280px] shrink-0 snap-start group/card flex flex-col bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] transition-all duration-300 transform hover:-translate-y-2 border border-slate-800 cursor-pointer select-none"
+                            className="block w-full md:w-[280px] shrink-0 md:snap-start group/card flex flex-col bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] transition-all duration-300 transform hover:-translate-y-2 border border-slate-800 cursor-pointer select-none"
                             onClick={(e) => {
                                 // 5px 이상 드래그된 상태면 클릭(링크 이동) 무시
                                 if (isDragging) {

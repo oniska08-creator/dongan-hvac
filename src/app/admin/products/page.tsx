@@ -3,7 +3,7 @@ import ProductTableClient from './ProductTableClient';
 
 export default function AdminProductsPage() {
     return (
-        <div className="max-w-7xl mx-auto space-y-8 relative">
+        <div className="max-w-7xl mx-auto space-y-8 relative mt-6 md:mt-8">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">제품 관리</h1>

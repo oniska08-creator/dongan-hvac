@@ -25,6 +25,7 @@ model Product {
   features    String
   description String   @default("")
   imageUrl    String?
+  images      String[]
   isVisible   Boolean  @default(true)
   specs       Json?
   createdAt   DateTime @default(now())
@@ -47,7 +48,7 @@ model VisitorLog {
 
 model User {
   id        Int      @id @default(autoincrement())
-  email     String   @unique
+  username  String   @unique
   password  String
   name      String?
   role      String   @default("ADMIN")

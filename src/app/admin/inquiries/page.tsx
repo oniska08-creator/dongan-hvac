@@ -57,7 +57,7 @@ export default function AdminInquiriesPage() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto space-y-8 relative">
+        <div className="max-w-7xl mx-auto space-y-8 relative mt-6 md:mt-8">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">문의 내역 관리</h1>
@@ -66,38 +66,51 @@ export default function AdminInquiriesPage() {
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead className="bg-slate-50 border-b border-slate-200">
-                            <tr className="text-slate-500 text-sm font-semibold uppercase tracking-wider">
-                                <th className="py-4 px-6 whitespace-nowrap">접수일자</th>
-                                <th className="py-4 px-6 whitespace-nowrap">고객명</th>
-                                <th className="py-4 px-6 whitespace-nowrap">연락처</th>
-                                <th className="py-4 px-6 whitespace-nowrap">현장 평수</th>
-                                <th className="py-4 px-6 text-center whitespace-nowrap">처리상태</th>
-                                <th className="py-4 px-6 text-center whitespace-nowrap">관리</th>
+                <div className="overflow-hidden md:overflow-x-auto p-4 md:p-0">
+                    <table className="w-full text-left border-collapse block md:table">
+                        <thead className="hidden md:table-header-group bg-slate-50 border-b border-slate-200">
+                            <tr className="text-slate-500 text-sm font-semibold uppercase tracking-wider block md:table-row">
+                                <th className="py-4 px-6 whitespace-nowrap block md:table-cell">접수일자</th>
+                                <th className="py-4 px-6 whitespace-nowrap block md:table-cell">고객명</th>
+                                <th className="py-4 px-6 whitespace-nowrap block md:table-cell">연락처</th>
+                                <th className="py-4 px-6 whitespace-nowrap block md:table-cell">현장 평수</th>
+                                <th className="py-4 px-6 text-center whitespace-nowrap block md:table-cell">처리상태</th>
+                                <th className="py-4 px-6 text-center whitespace-nowrap block md:table-cell">관리</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 text-slate-700">
+                        <tbody className="block md:table-row-group divide-y divide-slate-100 text-slate-700">
                             {(() => {
                                 const indexOfLastItem = currentPage * itemsPerPage;
                                 const indexOfFirstItem = indexOfLastItem - itemsPerPage;
                                 const currentItems = inquiries.slice(indexOfFirstItem, indexOfLastItem);
                                 return currentItems.map((item) => (
-                                    <tr key={item.id} className="hover:bg-slate-50 transition-colors">
-                                        <td className="py-4 px-6 font-medium text-slate-500 whitespace-nowrap">{item.date}</td>
-                                        <td className="py-4 px-6 font-bold text-slate-900 whitespace-nowrap">{item.name}</td>
-                                        <td className="py-4 px-6 whitespace-nowrap">{item.phone}</td>
-                                        <td className="py-4 px-6 whitespace-nowrap">{item.area}</td>
-                                        <td className="py-4 px-6 text-center whitespace-nowrap">
+                                    <tr key={item.id} className="block md:table-row hover:bg-slate-50 transition-colors bg-white mb-4 md:mb-0 border border-slate-200 md:border-none rounded-xl md:rounded-none p-4 md:p-0 shadow-sm md:shadow-none">
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 font-medium text-slate-500 whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">접수일자</span>
+                                            {item.date}
+                                        </td>
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 font-bold text-slate-900 whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">고객명</span>
+                                            {item.name}
+                                        </td>
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">연락처</span>
+                                            {item.phone}
+                                        </td>
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">현장 평수</span>
+                                            {item.area}
+                                        </td>
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 md:text-center whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">처리상태</span>
                                             <span className={`px-2 py-1 rounded text-xs font-bold ${item.status === '대기중' ? 'bg-red-100 text-red-600' : 'bg-slate-200 text-slate-600'}`}>
                                                 {item.status}
                                             </span>
                                         </td>
-                                        <td className="py-4 px-6 text-center whitespace-nowrap">
+                                        <td className="flex justify-center md:table-cell py-4 md:py-4 px-2 md:px-6 text-center whitespace-nowrap mt-2 md:mt-0">
                                             <button
                                                 onClick={() => openModal(item)}
-                                                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-sm transition-colors border border-slate-200 cursor-pointer"
+                                                className="w-full md:w-auto px-4 py-3 md:py-2 bg-slate-100 md:bg-white hover:bg-slate-200 md:hover:bg-slate-50 text-slate-800 font-bold rounded-xl md:rounded-lg text-sm transition-colors border border-slate-200 cursor-pointer shadow-sm md:shadow-none"
                                             >
                                                 상세보기
                                             </button>
@@ -106,8 +119,8 @@ export default function AdminInquiriesPage() {
                                 ));
                             })()}
                             {inquiries.length === 0 && (
-                                <tr>
-                                    <td colSpan={6} className="py-8 text-center text-slate-500">들어온 문의가 없습니다.</td>
+                                <tr className="block md:table-row">
+                                    <td colSpan={6} className="block md:table-cell py-8 text-center text-slate-500">들어온 문의가 없습니다.</td>
                                 </tr>
                             )}
                         </tbody>

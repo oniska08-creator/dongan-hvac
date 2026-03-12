@@ -8,8 +8,10 @@ export default function AdminPortfolioPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [formData, setFormData] = useState({ title: '', clientName: '', area: '', solution: '', date: '', img: '', images: [] as string[] });
-    const [imgFiles, setImgFiles] = useState<{ file: File, tempUrl: string }[]>([]); // 업로드 대기 중인 실제 파일 및 미리보기 URL
+    const [imgFiles, setImgFiles] = useState<{ tempUrl: string, isUploading: boolean }[]>([]); // 업로드 대기 중인 실제 파일 및 미리보기 URL
+    const [isUploading, setIsUploading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [progressText, setProgressText] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Pagination State
@@ -43,14 +45,63 @@ export default function AdminPortfolioPage() {
         }
     };
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         if (files.length > 0) {
+            setIsUploading(true);
             const newFileObjects = files.map(file => ({
-                file,
-                tempUrl: URL.createObjectURL(file)
+                tempUrl: URL.createObjectURL(file),
+                isUploading: true
             }));
+            
+            // UI에 업로드 중인 임시 이미지 표시
             setImgFiles((prev) => [...prev, ...newFileObjects]);
+
+            try {
+                const options = {
+                    maxSizeMB: 0.3,           // 최대 300KB 이하로 강제 다이어트
+                    maxWidthOrHeight: 1200,   // 가로 최대 1200px
+                    useWebWorker: true,       // 브라우저 멈춤 방지
+                    initialQuality: 0.8       // 초기 화질을 80%로 타협하여 빠른 압축
+                };
+
+                const compressPromises = files.map(file => imageCompression(file, options));
+                const compressedFiles = await Promise.all(compressPromises);
+
+                const uploadPromises = compressedFiles.map(async (compressedFile) => {
+                    const uploadForm = new FormData();
+                    uploadForm.append('file', compressedFile);
+
+                    const uploadRes = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: uploadForm
+                    });
+
+                    if (uploadRes.ok) {
+                        const blobData = await uploadRes.json();
+                        return blobData.url;
+                    } else {
+                        throw new Error('Upload to Blob failed');
+                    }
+                });
+
+                const newImageUrls = await Promise.all(uploadPromises);
+                
+                // 업로드 완료 후 실제 URL을 formData에 추가
+                setFormData(prev => ({ ...prev, images: [...prev.images, ...newImageUrls] }));
+                
+                // 임시 이미지(업로드 중 상태) 제거
+                setImgFiles(prev => prev.filter(f => !newFileObjects.includes(f)));
+
+            } catch (error) {
+                console.error("Background upload failed:", error);
+                alert("이미지 업로드 중 오류가 발생했습니다.");
+                // 업로드 실패 시 임시 이미지 롤백
+                setImgFiles(prev => prev.filter(f => !newFileObjects.includes(f)));
+            } finally {
+                setIsUploading(false);
+                if (fileInputRef.current) fileInputRef.current.value = '';
+            }
         }
     };
 
@@ -79,56 +130,17 @@ export default function AdminPortfolioPage() {
         setEditingId(null);
         setImgFiles([]);
         setFormData({ title: '', clientName: '', area: '', solution: '', date: '', img: '', images: [] as string[] });
+        setProgressText('');
     };
 
     const handleSave = async () => {
         setIsSaving(true);
+        setProgressText('저장 준비 중...');
         let finalImages = [...formData.images]; // 기존 Vercel URL들 유지
 
         try {
-            if (imgFiles.length > 0) {
-                const compressedFiles: File[] = [];
 
-                // 1. 순차적(Sequential) 압축: 브라우저 CPU 스로틀링 및 프리징 완벽 방지
-                for (const fileObj of imgFiles) {
-                    const options = {
-                        maxSizeMB: 0.5,           // 최대 500KB 이하로 최적화
-                        maxWidthOrHeight: 1200,   // 가로 최대 1200px
-                        useWebWorker: true        // 웹 워커로 메인 스레드 부하 분산
-                    };
-
-                    try {
-                        const compressedFile = await imageCompression(fileObj.file, options);
-                        compressedFiles.push(compressedFile);
-                    } catch (error) {
-                        console.error('Image compression failed', error);
-                        throw error;
-                    }
-                }
-
-                // 2. 가벼워진 파일들을 Vercel API로 업로드할 때는 네트워크 바운드이므로 병렬(Parallel) 처리
-                const uploadPromises = compressedFiles.map(async (compressedFile) => {
-                    const uploadForm = new FormData();
-                    uploadForm.append('file', compressedFile);
-
-                    const uploadRes = await fetch('/api/upload', {
-                        method: 'POST',
-                        body: uploadForm
-                    });
-
-                    if (uploadRes.ok) {
-                        const blobData = await uploadRes.json();
-                        return blobData.url;
-                    } else {
-                        throw new Error('Upload to Blob failed');
-                    }
-                });
-
-                // 네트워크 업로드만 병렬로 동시에 실행
-                const newImageUrls = await Promise.all(uploadPromises);
-                finalImages = [...finalImages, ...newImageUrls];
-            }
-
+            setProgressText('데이터베이스 등록 중...');
             const payload = {
                 title: formData.title,
                 clientName: formData.clientName,
@@ -159,11 +171,12 @@ export default function AdminPortfolioPage() {
             alert("저장에 실패했습니다. 이미지가 너무 크거나 Vercel 인증 문제가 있을 수 있습니다.");
         } finally {
             setIsSaving(false);
+            setProgressText('');
         }
     };
 
     return (
-        <div className="max-w-7xl mx-auto space-y-8 relative">
+        <div className="max-w-7xl mx-auto space-y-8 relative mt-6 md:mt-8">
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div>
@@ -180,53 +193,66 @@ export default function AdminPortfolioPage() {
 
             {/* Main Table Card */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead className="bg-slate-50 border-b border-slate-200">
-                            <tr className="text-slate-500 text-sm font-semibold uppercase tracking-wider">
-                                <th className="py-4 px-6 w-16 text-center whitespace-nowrap">ID</th>
-                                <th className="py-4 px-6 w-32 whitespace-nowrap">썸네일</th>
-                                <th className="py-4 px-6 w-full min-w-[300px] whitespace-nowrap">프로젝트명</th>
-                                <th className="py-4 px-6 whitespace-nowrap">적용 솔루션</th>
-                                <th className="py-4 px-6 w-32 whitespace-nowrap">시공일자</th>
-                                <th className="py-4 px-6 w-32 text-center whitespace-nowrap">관리</th>
+                <div className="overflow-hidden md:overflow-x-auto p-4 md:p-0">
+                    <table className="w-full text-left border-collapse block md:table">
+                        <thead className="hidden md:table-header-group bg-slate-50 border-b border-slate-200">
+                            <tr className="text-slate-500 text-sm font-semibold uppercase tracking-wider block md:table-row">
+                                <th className="py-4 px-6 w-16 text-center whitespace-nowrap block md:table-cell">ID</th>
+                                <th className="py-4 px-6 w-32 whitespace-nowrap block md:table-cell">썸네일</th>
+                                <th className="py-4 px-6 w-full min-w-[300px] whitespace-nowrap block md:table-cell">프로젝트명</th>
+                                <th className="py-4 px-6 whitespace-nowrap block md:table-cell">적용 솔루션</th>
+                                <th className="py-4 px-6 w-32 whitespace-nowrap block md:table-cell">시공일자</th>
+                                <th className="py-4 px-6 w-32 text-center whitespace-nowrap block md:table-cell">관리</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 text-slate-700">
+                        <tbody className="block md:table-row-group divide-y divide-slate-100 text-slate-700">
                             {(() => {
                                 const indexOfLastItem = currentPage * itemsPerPage;
                                 const indexOfFirstItem = indexOfLastItem - itemsPerPage;
                                 const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
                                 return currentItems.map((item) => (
-                                    <tr key={item.id} className="hover:bg-slate-50 transition-colors group">
-                                        <td className="py-4 px-6 text-center font-medium text-slate-900 whitespace-nowrap">{item.id}</td>
-                                        <td className="py-4 px-6 whitespace-nowrap">
+                                    <tr key={item.id} className="block md:table-row hover:bg-slate-50 transition-colors group bg-white mb-4 md:mb-0 border border-slate-200 md:border-none rounded-xl md:rounded-none p-4 md:p-0 shadow-sm md:shadow-none">
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 md:text-center font-medium text-slate-900 whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">ID</span>
+                                            {item.id}
+                                        </td>
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">썸네일</span>
                                             {item.imageUrl ? (
                                                 <img
                                                     src={item.imageUrl}
                                                     alt={item.title}
-                                                    className="w-20 h-14 object-cover rounded-lg shadow-sm border border-slate-200"
+                                                    className="w-16 h-12 md:w-20 md:h-14 object-cover rounded-lg shadow-sm border border-slate-200"
                                                 />
                                             ) : (
-                                                <div className="w-20 h-14 bg-gray-800 flex items-center justify-center rounded-lg shadow-sm border border-slate-200 text-gray-500">
-                                                    <ImageOff size={20} />
+                                                <div className="w-16 h-12 md:w-20 md:h-14 bg-gray-800 flex items-center justify-center rounded-lg shadow-sm border border-slate-200 text-gray-500">
+                                                    <ImageOff size={16} className="md:w-5 md:h-5" />
                                                 </div>
                                             )}
                                         </td>
-                                        <td className="py-4 px-6 font-bold text-slate-900 whitespace-nowrap">{item.title}</td>
-                                        <td className="py-4 px-6 text-sm whitespace-nowrap">{item.solution}</td>
-                                        <td className="py-4 px-6 text-sm font-medium text-slate-500 whitespace-nowrap">{item.date}</td>
-                                        <td className="py-4 px-6 whitespace-nowrap">
-                                            <div className="flex items-center justify-center gap-3 text-sm font-semibold">
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">프로젝트명</span>
+                                            <span className="font-bold text-slate-900 truncate max-w-[200px] md:max-w-none">{item.title}</span>
+                                        </td>
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">적용 솔루션</span>
+                                            <span className="text-sm">{item.solution}</span>
+                                        </td>
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
+                                            <span className="md:hidden font-bold text-slate-400 text-xs uppercase">시공일자</span>
+                                            <span className="text-sm font-medium text-slate-500">{item.date}</span>
+                                        </td>
+                                        <td className="flex justify-center md:table-cell py-4 md:py-4 px-2 md:px-6 whitespace-nowrap mt-2 md:mt-0">
+                                            <div className="flex items-center justify-center gap-6 md:gap-3 text-sm font-bold w-full md:w-auto">
                                                 <button
                                                     onClick={() => openModal(item)}
-                                                    className="text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
+                                                    className="text-blue-600 hover:text-blue-800 transition-colors cursor-pointer flex-1 md:flex-none text-center py-2 md:py-0 bg-blue-50 md:bg-transparent rounded-lg md:rounded-none"
                                                 >
                                                     수정
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(item.id)}
-                                                    className="text-red-600 hover:text-red-800 transition-colors cursor-pointer"
+                                                    className="text-red-600 hover:text-red-800 transition-colors cursor-pointer flex-1 md:flex-none text-center py-2 md:py-0 bg-red-50 md:bg-transparent rounded-lg md:rounded-none"
                                                 >
                                                     삭제
                                                 </button>
@@ -236,8 +262,8 @@ export default function AdminPortfolioPage() {
                                 ));
                             })()}
                             {items.length === 0 && (
-                                <tr>
-                                    <td colSpan={6} className="py-8 text-center text-slate-500">등록된 시공사례가 없습니다.</td>
+                                <tr className="block md:table-row">
+                                    <td colSpan={6} className="block md:table-cell py-8 text-center text-slate-500">등록된 시공사례가 없습니다.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -368,15 +394,13 @@ export default function AdminPortfolioPage() {
                                                         >✕</button>
                                                     </div>
                                                 ))}
-                                                {/* 방금 클라이언트에서 선택한 신규 이미지들 */}
+                                                {/* 방금 클라이언트에서 선택하여 백그라운드 업로드 중인 이미지들 (시각적 피드백) */}
                                                 {imgFiles.map((fileObj, idx) => (
-                                                    <div key={`new-${idx}`} className="relative flex-shrink-0">
-                                                        <img src={fileObj.tempUrl} alt={`신규 ${idx + 1}`} className="w-24 h-24 object-cover rounded-lg border-2 border-cyan-400 shadow-sm" />
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setImgFiles(prev => prev.filter((_, i) => i !== idx))}
-                                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow hover:bg-red-600 transition-colors"
-                                                        >✕</button>
+                                                    <div key={`new-${idx}`} className="relative flex-shrink-0 opacity-50">
+                                                        <img src={fileObj.tempUrl} alt={`업로드 중 ${idx + 1}`} className="w-24 h-24 object-cover rounded-lg border-2 border-dashed border-cyan-400 shadow-sm" />
+                                                        <div className="absolute inset-0 flex items-center justify-center">
+                                                            <div className="w-6 h-6 border-2 border-t-white border-white/30 rounded-full animate-spin"></div>
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -414,14 +438,14 @@ export default function AdminPortfolioPage() {
 
                         {/* Sticky Footer */}
                         <div className="p-6 border-t border-slate-200 bg-slate-50 sticky bottom-0 z-10 flex items-center justify-end gap-3">
-                            <button
-                                type="submit"
-                                form="portfolioForm"
-                                disabled={isSaving}
-                                className="px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer disabled:bg-slate-400"
-                            >
-                                {isSaving ? '저장 중...' : '저장'}
-                            </button>
+                                <button
+                                    type="submit"
+                                    form="portfolioForm"
+                                    disabled={isSaving || isUploading}
+                                    className="px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer disabled:bg-slate-400"
+                                >
+                                    {isSaving ? (progressText || '저장 중...') : isUploading ? '이미지 업로드 중...' : '저장'}
+                                </button>
                             <button
                                 type="button"
                                 onClick={closeModal}

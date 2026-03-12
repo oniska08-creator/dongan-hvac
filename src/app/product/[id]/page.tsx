@@ -2,6 +2,8 @@ import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ImageOff, CheckCircle2, Menu, ArrowRight } from "lucide-react";
+import ProductGallery from "./ProductGallery";
+import ClientHeader from "@/components/ClientHeader";
 
 interface ProductPageProps {
     params: Promise<{
@@ -39,73 +41,37 @@ export default async function ProductDetailPage(props: ProductPageProps) {
 
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100 font-sans tracking-tight">
-
-            {/* 1. Header (GNB) */}
-            <header className="fixed top-0 left-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50 transition-colors duration-300 py-4">
-                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-                    <Link href="/" className="text-2xl font-extrabold text-white tracking-tight cursor-pointer">
-                        DongAn <span className="text-cyan-400 font-light">HVAC</span>
-                    </Link>
-                    <nav className="hidden md:flex space-x-8">
-                        <Link href="/about" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium tracking-wide">회사소개</Link>
-                        <Link href="/products" className="text-cyan-400 font-medium tracking-wide drop-shadow-[0_0_10px_rgba(8,145,178,0.5)]">제품안내</Link>
-                        <Link href="/portfolio" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium tracking-wide">시공사례</Link>
-                        <Link href="/contact" className="text-slate-300 hover:text-cyan-400 transition-colors font-medium tracking-wide">고객지원</Link>
-                    </nav>
-                    <button className="md:hidden text-white hover:text-cyan-400 transition-colors" aria-label="Toggle Menu">
-                        <Menu size={28} />
-                    </button>
-                </div>
-            </header>
-
             {/* 페이지 콘텐츠 (레이아웃 보호 영역) */}
-            <div className="relative z-10 pt-28 pb-16 px-6">
+            <div className="relative z-10 pt-20 md:pt-28 pb-32 md:pb-16 px-0 md:px-6">
                 {/* 메인 2단 분할 영역 */}
-                <main className="max-w-7xl mx-auto px-6 pb-12">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
-
-                        {/* 좌측: 이미지 뷰어 */}
-                        <div className="bg-slate-50/5 rounded-3xl p-8 lg:p-12 aspect-square flex items-center justify-center border border-slate-800 shadow-2xl relative group">
-                            {product.imageUrl ? (
-                                <img
-                                    src={product.imageUrl}
-                                    alt={product.name}
-                                    className="w-full h-full object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
-                                />
-                            ) : (
-                                <div className="flex flex-col items-center text-slate-600">
-                                    <ImageOff size={80} className="mb-4 opacity-50" />
-                                    <span className="uppercase tracking-widest font-semibold opacity-50">Image Ready</span>
-                                </div>
-                            )}
-                            {/* 럭셔리 반사광 효과 */}
-                            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none rounded-3xl" />
-                        </div>
-
-                        {/* 우측: 스펙 및 액션 */}
-                        <div className="flex flex-col justify-center">
-                            <span className="text-cyan-400 font-semibold tracking-wider text-sm lg:text-base mb-2 uppercase drop-shadow-[0_0_8px_rgba(8,145,178,0.5)]">
+                <main className="max-w-7xl mx-auto md:px-6 pb-12">
+                        <ProductGallery 
+                            images={(product as any).images as string[]} 
+                            fallbackUrl={product.imageUrl} 
+                            name={product.name} 
+                        >
+                            <span className="text-cyan-400 font-bold tracking-widest text-xs md:text-sm lg:text-base mb-4 uppercase drop-shadow-[0_0_8px_rgba(8,145,178,0.5)]">
                                 {product.category || "General"}
                             </span>
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-tight mb-8 tracking-tighter drop-shadow-lg">
                                 {product.name}
                             </h1>
-                            <p className="text-slate-400 text-lg md:text-xl font-light leading-relaxed mb-8 break-keep">
+                            <p className="text-slate-400 text-lg md:text-xl font-light leading-relaxed mb-12 break-keep">
                                 {product.description || product.features || "동안공조가 제안하는 최적의 공조 솔루션으로 공간의 가치를 높여보세요."}
                             </p>
 
                             {/* 상세 스펙 표 */}
                             {specs.length > 0 && (
-                                <div className="border-t border-slate-800/80 pt-8 mt-2">
-                                    <h3 className="text-xl font-bold text-white mb-6">제품 상세 스펙</h3>
-                                    <ul className="space-y-4">
+                                <div className="pt-6 border-t border-slate-800/50 md:border-none">
+                                    <h3 className="text-2xl font-bold text-white mb-8 tracking-tight">제품 상세 스펙</h3>
+                                    <ul className="space-y-6">
                                         {specs.map((spec, idx) => (
-                                            <li key={idx} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 pb-4 border-b border-slate-800/40 last:border-0 last:pb-0">
-                                                <span className="text-slate-500 font-medium sm:w-1/3 flex items-center gap-2">
-                                                    <CheckCircle2 size={16} className="text-cyan-500/70" />
+                                            <li key={idx} className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 pb-6 border-b border-slate-800/30 last:border-0 last:pb-0">
+                                                <span className="text-slate-500 font-semibold sm:w-1/3 flex items-center gap-3 tracking-wide">
+                                                    <CheckCircle2 size={18} className="text-cyan-600" />
                                                     {spec.key}
                                                 </span>
-                                                <span className="text-slate-200 font-semibold sm:w-2/3 break-words">
+                                                <span className="text-slate-200 font-medium sm:w-2/3 break-words text-lg">
                                                     {spec.value}
                                                 </span>
                                             </li>
@@ -114,25 +80,40 @@ export default async function ProductDetailPage(props: ProductPageProps) {
                                 </div>
                             )}
 
-                            {/* Call to Action 버튼 */}
-                            <div className="flex justify-center items-center gap-4 mt-12 mb-20">
+                            {/* Call to Action 버튼 (Desktop) */}
+                            <div className="hidden md:flex items-center gap-6 mt-16">
                                 <Link
                                     href="/products"
-                                    className="rounded-full px-6 py-3 border border-slate-700 bg-transparent text-slate-300 hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 group cursor-pointer font-medium"
+                                    className="rounded-full px-8 py-4 border border-slate-700 bg-transparent text-slate-300 hover:bg-slate-800 hover:text-white transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold tracking-wide"
                                 >
-                                    <ArrowLeft size={20} className="transition-transform group-hover:-translate-x-1" /> 목록으로 돌아가기
+                                    <ArrowLeft size={20} className="transition-transform group-hover:-translate-x-1" /> 목록으로
                                 </Link>
                                 <Link
                                     href="/contact"
-                                    className="px-10 py-4 rounded-full bg-cyan-500 text-white font-bold hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.4)] flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+                                    className="px-10 py-4 rounded-full bg-cyan-500 text-white font-extrabold text-lg hover:bg-cyan-400 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(6,182,212,0.4)] flex items-center justify-center gap-3 cursor-pointer"
                                 >
-                                    빠른 견적 상담하기 <ArrowRight size={20} className="cursor-pointer" />
+                                    빠른 견적 상담하기 <ArrowRight size={22} />
                                 </Link>
                             </div>
-                        </div>
-
-                    </div>
+                        </ProductGallery>
                 </main>
+            </div>
+
+            {/* 고정형 액션 버튼 (Floating Action Button - Mobile Sticky) */}
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-950/90 backdrop-blur-xl border-t border-slate-800/60 z-[60] flex items-center justify-between gap-4 md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+                <Link
+                    href="/products"
+                    className="p-4 rounded-full border border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 transition-colors flex items-center justify-center shrink-0"
+                    aria-label="목록으로"
+                >
+                    <ArrowLeft size={22} />
+                </Link>
+                <Link
+                    href="/contact"
+                    className="flex-1 py-4 rounded-full bg-cyan-500 text-white font-bold text-lg hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center justify-center gap-2"
+                >
+                    견적 상담하기 <ArrowRight size={20} />
+                </Link>
             </div>
         </div>
     );

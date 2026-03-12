@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import AuthProvider from "@/components/AuthProvider";
 import KakaoFAB from "@/components/KakaoFAB";
+import ClientHeader from "@/components/ClientHeader";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-900 text-slate-100`}
       >
         <AuthProvider>
+          <ClientHeader />
           {children}
           <KakaoFAB />
         </AuthProvider>

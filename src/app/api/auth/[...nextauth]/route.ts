@@ -8,16 +8,16 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "email" },
+                username: { label: "Username", type: "text" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                if (!credentials?.email || !credentials?.password) {
+                if (!credentials?.username || !credentials?.password) {
                     return null;
                 }
 
                 const user = await prisma.user.findUnique({
-                    where: { email: credentials.email }
+                    where: { username: credentials.username }
                 });
 
                 if (!user) {
@@ -25,6 +25,7 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+                //const isPasswordValid = true; // 🚨 마스터 강제 프리패스 발동!
 
                 if (!isPasswordValid) {
                     return null;
@@ -32,10 +33,10 @@ export const authOptions: NextAuthOptions = {
 
                 return {
                     id: user.id.toString(),
-                    email: user.email,
                     name: user.name,
+                    username: user.username,
                     role: user.role
-                };
+                } as any;
             }
         })
     ],
@@ -43,13 +44,15 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
-                token.role = user.role;
+                token.username = (user as any).username;
+                token.role = (user as any).role;
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user) {
                 (session.user as any).id = token.id;
+                (session.user as any).username = token.username;
                 (session.user as any).role = token.role;
             }
             return session;
@@ -60,6 +63,7 @@ export const authOptions: NextAuthOptions = {
     },
     session: {
         strategy: "jwt",
+        maxAge: 60 * 60, // 1 hour (auto logout server side constraint)
     },
     secret: process.env.NEXTAUTH_SECRET || "fallback_secret_for_local_dev",
 };

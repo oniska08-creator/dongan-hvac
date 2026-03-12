@@ -14,7 +14,7 @@ export default async function Page() {
             imageUrl: true,
         },
         orderBy: { createdAt: 'desc' },
-        take: 3
+        take: 4
     });
 
     const rawPortfolios = await prisma.portfolio.findMany({

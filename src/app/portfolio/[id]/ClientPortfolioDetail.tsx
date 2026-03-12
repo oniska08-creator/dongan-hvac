@@ -6,23 +6,7 @@ import { ArrowLeft, Menu, ArrowRight } from "lucide-react";
 export default function ClientPortfolioDetail({ project }: { project: any }) {
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-cyan-500/30">
-            {/* 1. Header (GNB) */}
-            <header className="fixed top-0 left-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50 transition-colors duration-300 py-4">
-                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-                    <Link href="/" className="text-2xl font-extrabold text-white tracking-tight cursor-pointer">
-                        DongAn <span className="text-cyan-400 font-light">HVAC</span>
-                    </Link>
-                    <nav className="hidden md:flex space-x-8">
-                        <Link href="/about" className="text-white hover:text-cyan-400 transition-colors font-medium tracking-wide cursor-pointer">회사소개</Link>
-                        <Link href="/products" className="text-white hover:text-cyan-400 transition-colors font-medium tracking-wide cursor-pointer">제품안내</Link>
-                        <Link href="/portfolio" className="text-cyan-400 font-medium tracking-wide cursor-pointer">시공사례</Link>
-                        <Link href="/contact" className="text-white hover:text-cyan-400 transition-colors font-medium tracking-wide cursor-pointer">고객지원</Link>
-                    </nav>
-                    <button className="md:hidden text-white hover:text-cyan-400 transition-colors cursor-pointer" aria-label="Toggle Menu">
-                        <Menu size={28} className="cursor-pointer" />
-                    </button>
-                </div>
-            </header>
+            {/* Header is handled globally in layout.tsx via ClientHeader */}
 
             {/* 2. Hero Section */}
             <section className="relative h-[60vh] w-full flex items-center justify-center pt-24">
@@ -61,20 +45,20 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
                     transition={{ duration: 0.8, delay: 0.4 }}
                     className="bg-slate-800/80 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] border border-slate-700 w-full"
                 >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-slate-700/50">
-                        <div className="px-4 text-center">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-slate-700/50">
+                        <div className="px-4 text-center pt-4 md:pt-0">
                             <p className="text-slate-500 font-bold text-sm tracking-widest uppercase mb-2">고객사</p>
                             <p className="text-white font-extrabold text-lg md:text-xl">{project.clientName || "DongAn 고객사"}</p>
                         </div>
-                        <div className="px-4 text-center">
+                        <div className="px-4 text-center pt-8 md:pt-0">
                             <p className="text-slate-500 font-bold text-sm tracking-widest uppercase mb-2">시공일자</p>
                             <p className="text-white font-extrabold text-lg md:text-xl">{project.date}</p>
                         </div>
-                        <div className="px-4 text-center">
+                        <div className="px-4 text-center pt-8 md:pt-0">
                             <p className="text-slate-500 font-bold text-sm tracking-widest uppercase mb-2">시공면적</p>
                             <p className="text-cyan-400 font-extrabold text-lg md:text-xl">{project.area || "협의"}</p>
                         </div>
-                        <div className="px-4 text-center">
+                        <div className="px-4 text-center pt-8 md:pt-0">
                             <p className="text-slate-500 font-bold text-sm tracking-widest uppercase mb-2">적용솔루션</p>
                             <p className="text-white font-extrabold text-lg md:text-xl break-keep">{project.solution}</p>
                         </div>
@@ -141,17 +125,23 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
             </main>
 
             {/* Footer */}
-            <footer className="bg-slate-950 py-12 px-6 border-t border-slate-900 mt-10">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div className="text-center md:text-left">
-                        <h2 className="text-2xl font-extrabold text-white mb-4 tracking-tight">DongAn <span className="text-cyan-400 font-light">HVAC</span></h2>
-                        <p className="text-slate-400 leading-relaxed font-light break-keep">
+            <footer className="bg-slate-950 py-12 md:py-16 px-6 border-t border-slate-900 mt-10">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 justify-between items-center sm:items-start md:items-center">
+                    <div className="text-center sm:text-left">
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 md:mb-4 tracking-tight">DongAn <span className="text-cyan-400 font-light">HVAC</span></h2>
+                        <p className="text-slate-400 leading-relaxed font-light break-keep text-sm md:text-base">
                             공간의 쾌적함을 넘어, 비즈니스의 성공을 돕는 최적의 공조 파트너입니다.
                         </p>
                     </div>
-                    <div className="text-center md:text-right text-slate-400 font-light space-y-2 text-[15px]">
-                        <p>Email: contact@dongan-hvac.com &nbsp;|&nbsp; Tel: 02-123-4567 &nbsp;|&nbsp; Fax: 02-123-4568</p>
-                        <p className="pt-2">Copyright &copy; 2026 DongAn HVAC. All rights reserved.</p>
+                    <div className="text-center sm:text-left md:text-right flex flex-col gap-2 text-slate-400 font-light text-sm md:text-[15px]">
+                        <div className="flex flex-col sm:flex-row sm:gap-4 md:flex-col lg:flex-row">
+                            <span>Email: contact@dongan-hvac.com</span>
+                            <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
+                            <span>Tel: 02-123-4567</span>
+                            <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
+                            <span>Fax: 02-123-4568</span>
+                        </div>
+                        <p className="pt-2 md:pt-4 border-t border-slate-800/50 mt-2">Copyright &copy; 2026 DongAn HVAC. All rights reserved.</p>
                     </div>
                 </div>
             </footer>
