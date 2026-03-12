@@ -164,9 +164,9 @@ export default function AdminInquiriesPage() {
 
             {/* Modal Popup */}
             {selectedInquiry && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-xl p-8 w-full max-w-2xl shadow-2xl relative">
-                        <div className="flex justify-between items-start mb-6 border-b border-slate-100 pb-4">
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-hidden">
+                        <div className="p-6 border-b border-slate-200 bg-white sticky top-0 z-10 flex justify-between items-center">
                             <div>
                                 <h2 className="text-2xl font-extrabold text-slate-900">문의 상세 내용</h2>
                                 <p className="text-sm text-slate-500 mt-1">접수일자: {selectedInquiry.date}</p>
@@ -176,44 +176,45 @@ export default function AdminInquiriesPage() {
                             </span>
                         </div>
 
-                        <div className="space-y-4 mb-8">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                                    <div className="text-xs font-bold text-slate-400 mb-1">고객명</div>
-                                    <div className="font-bold text-slate-900">{selectedInquiry.name}</div>
+                        <div className="overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
+                            <div className="space-y-4 mb-8">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                                        <div className="text-xs font-bold text-slate-400 mb-1">고객명</div>
+                                        <div className="font-bold text-slate-900">{selectedInquiry.name}</div>
+                                    </div>
+                                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                                        <div className="text-xs font-bold text-slate-400 mb-1">연락처</div>
+                                        <div className="font-bold text-slate-900">{selectedInquiry.phone}</div>
+                                    </div>
+                                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 col-span-2">
+                                        <div className="text-xs font-bold text-slate-400 mb-1">현장 정보 (평수/용도)</div>
+                                        <div className="font-bold text-slate-900">{selectedInquiry.area}</div>
+                                    </div>
                                 </div>
-                                <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                                    <div className="text-xs font-bold text-slate-400 mb-1">연락처</div>
-                                    <div className="font-bold text-slate-900">{selectedInquiry.phone}</div>
-                                </div>
-                                <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 col-span-2">
-                                    <div className="text-xs font-bold text-slate-400 mb-1">현장 정보 (평수/용도)</div>
-                                    <div className="font-bold text-slate-900">{selectedInquiry.area}</div>
-                                </div>
-                            </div>
 
-                            <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 min-h-[150px]">
-                                <div className="text-xs font-bold text-slate-400 mb-2">상세 문의 내용</div>
-                                <div className="text-slate-800 whitespace-pre-wrap leading-relaxed">
-                                    {selectedInquiry.content}
+                                <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 min-h-[150px]">
+                                    <div className="text-xs font-bold text-slate-400 mb-2">상세 문의 내용</div>
+                                    <div className="text-slate-800 whitespace-pre-wrap leading-relaxed">
+                                        {selectedInquiry.content}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                        <div className="p-6 border-t border-slate-200 bg-slate-50 sticky bottom-0 z-10 flex items-center justify-end gap-3">
                             {selectedInquiry.status === "대기중" ? (
                                 <button
                                     onClick={() => handleCompleteStatus(selectedInquiry.id)}
-                                    className="px-6 py-3 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md flex-1 mr-4 cursor-pointer"
+                                    className="px-6 py-3 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md flex-1 cursor-pointer"
                                 >
-                                    상담 완료 처리하기
+                                    상담 완료 처리
                                 </button>
                             ) : (
-                                <div className="text-slate-500 font-bold flex-1">이미 상담이 완료된 건입니다.</div>
+                                <div className="text-slate-500 font-bold flex-1 text-sm md:text-base">상담 완료 건</div>
                             )}
                             <button
                                 onClick={closeModal}
-                                className="px-6 py-3 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors w-32 cursor-pointer"
+                                className="px-6 py-3 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors w-24 md:w-32 cursor-pointer"
                             >
                                 닫기
                             </button>

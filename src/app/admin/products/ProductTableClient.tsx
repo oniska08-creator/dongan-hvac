@@ -195,10 +195,10 @@ export default function ProductTableClient() {
 
     return (
         <>
-            <div className="flex justify-end mb-4 -mt-16 relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mb-4 -mt-16 relative z-10">
                 <button
                     onClick={() => openModal()}
-                    className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-md flex items-center gap-2 text-sm cursor-pointer"
+                    className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-sm cursor-pointer whitespace-nowrap"
                 >
                     [+ 새 제품 등록]
                 </button>
@@ -344,10 +344,9 @@ export default function ProductTableClient() {
                 </div>
             )}
 
-            {/* Modal Popup */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[85vh] overflow-hidden">
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-hidden">
                         <div className="p-6 border-b border-slate-200 bg-white sticky top-0 z-10 flex justify-between items-center">
                             <h2 className="text-2xl font-extrabold text-slate-900">
                                 {editingId ? '제품 수정' : '새 제품 등록'}

@@ -1,8 +1,13 @@
-"use client";
-
-import React from "react";
+import { usePathname } from "next/navigation";
 
 export default function KakaoFAB() {
+    const pathname = usePathname();
+    
+    // Hide on admin routes
+    if (pathname.startsWith('/admin')) {
+        return null;
+    }
+
     return (
         <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end pointer-events-none">
 
