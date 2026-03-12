@@ -1,8 +1,10 @@
+"use client";
+
 import { usePathname } from "next/navigation";
 
 export default function KakaoFAB() {
     const pathname = usePathname();
-    
+
     // Hide on admin routes
     if (pathname?.startsWith('/admin')) {
         return null;
