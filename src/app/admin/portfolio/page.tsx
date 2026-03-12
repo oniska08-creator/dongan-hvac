@@ -180,7 +180,7 @@ export default function AdminPortfolioPage() {
     return (
         <div className="max-w-7xl mx-auto space-y-8 relative mt-6 md:mt-8">
             {/* Page Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
                 <div>
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">시공사례 관리</h1>
                     <p className="text-slate-500 mt-2 text-sm">프론트엔드 시공사례 페이지에 노출되는 프로젝트를 관리합니다.</p>
@@ -306,12 +306,12 @@ export default function AdminPortfolioPage() {
             </div>
 
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm">
-                    {/* Modal Container: Max width 600px (max-w-xl), Max height 90vh (mobile) / 85vh (desktop) to fit within browser */}
-                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-y-auto sm:overflow-hidden">
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                    {/* Modal Container: Fixed header/footer, scrollable body */}
+                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[90vh] overflow-hidden">
 
-                        {/* Sticky Header */}
-                        <div className="p-6 border-b border-slate-200 bg-white sticky top-0 z-10 flex justify-between items-center">
+                        {/* Fixed Header */}
+                        <div className="p-6 border-b border-slate-200 bg-white flex justify-between items-center flex-shrink-0">
                             <h2 className="text-2xl font-extrabold text-slate-900">
                                 {editingId ? '시공사례 수정' : '새 시공사례 등록'}
                             </h2>
@@ -437,8 +437,8 @@ export default function AdminPortfolioPage() {
                             </form>
                         </div>
 
-                        {/* Sticky Footer */}
-                        <div className="p-6 border-t border-slate-200 bg-slate-50 sticky bottom-0 z-10 flex items-center justify-end gap-3">
+                        {/* Fixed Footer */}
+                        <div className="p-6 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-3 flex-shrink-0">
                             <button
                                 type="submit"
                                 form="portfolioForm"

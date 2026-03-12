@@ -60,7 +60,7 @@ export default function AdminInquiriesPage() {
 
     return (
         <div className="max-w-7xl mx-auto space-y-8 relative mt-6 md:mt-8">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-6 md:mb-8">
                 <div>
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">문의 내역 관리</h1>
                     <p className="text-slate-500 mt-2 text-sm">고객이 홈페이지를 통해 남긴 견적 문의를 확인하고 상태를 관리합니다.</p>
@@ -164,9 +164,9 @@ export default function AdminInquiriesPage() {
 
             {/* Modal Popup */}
             {selectedInquiry && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-y-auto sm:overflow-hidden">
-                        <div className="p-6 border-b border-slate-200 bg-white sticky top-0 z-10 flex justify-between items-center">
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative flex flex-col max-h-[90vh] overflow-hidden">
+                        <div className="p-6 border-b border-slate-200 bg-white flex justify-between items-center flex-shrink-0">
                             <div>
                                 <h2 className="text-2xl font-extrabold text-slate-900">문의 상세 내용</h2>
                                 <p className="text-sm text-slate-500 mt-1">접수일자: {selectedInquiry.date}</p>
@@ -201,7 +201,7 @@ export default function AdminInquiriesPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="p-6 border-t border-slate-200 bg-slate-50 sticky bottom-0 z-10 flex items-center justify-end gap-3">
+                        <div className="p-6 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-3 flex-shrink-0">
                             {selectedInquiry.status === "대기중" ? (
                                 <button
                                     onClick={() => handleCompleteStatus(selectedInquiry.id)}
