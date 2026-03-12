@@ -3,7 +3,7 @@ import ClientHome from './ClientHome';
 
 export const dynamic = 'force-dynamic';
 // Enabled ISR: Revalidate every 60 seconds to dramatically reduce TTFB cache miss latency global performance
-
+//export const revalidate = 60;
 export default async function Page() {
     const rawProducts = await prisma.product.findMany({
         where: { isVisible: true },
