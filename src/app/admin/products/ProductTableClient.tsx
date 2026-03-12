@@ -346,7 +346,7 @@ export default function ProductTableClient() {
 
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-hidden">
+                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-y-auto sm:overflow-hidden">
                         <div className="p-6 border-b border-slate-200 bg-white sticky top-0 z-10 flex justify-between items-center">
                             <h2 className="text-2xl font-extrabold text-slate-900">
                                 {editingId ? '제품 수정' : '새 제품 등록'}

@@ -308,7 +308,7 @@ export default function AdminPortfolioPage() {
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm">
                     {/* Modal Container: Max width 600px (max-w-xl), Max height 90vh (mobile) / 85vh (desktop) to fit within browser */}
-                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-hidden">
+                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-y-auto sm:overflow-hidden">
 
                         {/* Sticky Header */}
                         <div className="p-6 border-b border-slate-200 bg-white sticky top-0 z-10 flex justify-between items-center">

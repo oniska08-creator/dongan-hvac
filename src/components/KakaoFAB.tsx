@@ -4,7 +4,7 @@ export default function KakaoFAB() {
     const pathname = usePathname();
     
     // Hide on admin routes
-    if (pathname.startsWith('/admin')) {
+    if (pathname?.startsWith('/admin')) {
         return null;
     }
 
