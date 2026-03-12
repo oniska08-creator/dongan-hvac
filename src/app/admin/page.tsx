@@ -17,7 +17,7 @@ interface PortfolioType {
     date: string;
 }
 
-export const revalidate = 0; // Dynamic rendering
+export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
     // 1. Fetch Summary Stats

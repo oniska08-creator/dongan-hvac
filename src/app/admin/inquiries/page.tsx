@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminInquiriesPage() {
     const [inquiries, setInquiries] = useState<any[]>([]);
     const [selectedInquiry, setSelectedInquiry] = useState<any | null>(null);

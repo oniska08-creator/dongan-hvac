@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import ClientPortfolioDetail from './ClientPortfolioDetail';
 
-export const revalidate = 60; // 60초 주기로 백그라운드에서 캐시 갱신 (ISR)
+export const dynamic = 'force-dynamic';
 
 export default async function PortfolioDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = await params;
