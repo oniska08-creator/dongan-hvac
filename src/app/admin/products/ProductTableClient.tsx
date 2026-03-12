@@ -195,7 +195,11 @@ export default function ProductTableClient() {
 
     return (
         <>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mb-4 -mt-16 relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">제품 관리</h1>
+                    <p className="text-slate-500 mt-2 text-sm">프론트엔드 제품 목록에 노출되는 제품들을 관리합니다.</p>
+                </div>
                 <button
                     onClick={() => openModal()}
                     className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-sm cursor-pointer whitespace-nowrap"
@@ -345,8 +349,8 @@ export default function ProductTableClient() {
             )}
 
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[90vh] overflow-hidden">
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 pt-8 pb-8 backdrop-blur-sm overflow-y-auto">
+                    <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl relative flex flex-col max-h-[85vh] overflow-hidden">
                         <div className="p-6 border-b border-slate-200 bg-white flex justify-between items-center flex-shrink-0">
                             <h2 className="text-2xl font-extrabold text-slate-900">
                                 {editingId ? '제품 수정' : '새 제품 등록'}

@@ -164,8 +164,8 @@ export default function AdminInquiriesPage() {
 
             {/* Modal Popup */}
             {selectedInquiry && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative flex flex-col max-h-[90vh] overflow-hidden">
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 pt-8 pb-8 backdrop-blur-sm overflow-y-auto">
+                    <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative flex flex-col max-h-[85vh] overflow-hidden">
                         <div className="p-6 border-b border-slate-200 bg-white flex justify-between items-center flex-shrink-0">
                             <div>
                                 <h2 className="text-2xl font-extrabold text-slate-900">문의 상세 내용</h2>
