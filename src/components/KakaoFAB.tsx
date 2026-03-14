@@ -26,20 +26,21 @@ export default function KakaoFAB() {
                 <div className="absolute -bottom-2 right-6 w-4 h-4 bg-slate-800 rotate-45 border-r border-b border-slate-700" />
             </div>
 
-            {/* Button Wrapper for Ping & Scale */}
+            {/* Button Wrapper */}
             <div className="relative flex items-center justify-center pointer-events-auto">
-                {/* Background Ping Animation */}
-                <div className="absolute inset-0 bg-[#FEE500] rounded-full animate-ping opacity-60" />
-
-                {/* Main FAB Link */}
+                {/* Main FAB Link with Breathing Effect */}
                 <a
                     href="http://pf.kakao.com/_YOUR_KAKAO_ID/chat"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative w-16 h-16 bg-[#FEE500] rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.3)] flex items-center justify-center transition-transform hover:scale-110 duration-300 ring-2 ring-transparent hover:ring-[#FEE500]/50"
+                    className="relative w-16 h-16 bg-[#FEE500] rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.3)] flex items-center justify-center transition-transform hover:scale-110 duration-300 ring-2 ring-transparent hover:ring-[#FEE500]/50 animate-breathing"
+                    style={{ 
+                        willChange: 'transform',
+                        transformStyle: 'preserve-3d'
+                    }}
                     aria-label="카카오톡 상담하기"
                 >
-                    {/* Kakao Talk Speech Bubble Icon (Custom SVG for Kakao Vibe) */}
+                    {/* Kakao Talk Speech Bubble Icon */}
                     <svg
                         width="32"
                         height="32"
@@ -52,6 +53,18 @@ export default function KakaoFAB() {
                         />
                     </svg>
                 </a>
+                
+                {/* Custom Breathing Animation Style */}
+                <style jsx global>{`
+                    @keyframes breathing {
+                        0% { transform: scale(1); }
+                        50% { transform: scale(1.08); }
+                        100% { transform: scale(1); }
+                    }
+                    .animate-breathing {
+                        animation: breathing 3s ease-in-out infinite;
+                    }
+                `}</style>
             </div>
 
         </div>
