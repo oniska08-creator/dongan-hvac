@@ -117,15 +117,15 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
                     <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-center items-center gap-4 mb-20">
                         <Link
                             href="/portfolio"
-                            className="w-full sm:w-auto rounded-full px-8 py-4 bg-white text-slate-900 hover:bg-slate-100 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold shadow-lg"
+                            className="w-full sm:w-auto rounded-full px-6 py-4 bg-white border border-slate-300 text-slate-900 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 group cursor-pointer font-medium text-base shadow-sm"
                         >
                             <ArrowLeft size={20} className="transition-transform group-hover:-translate-x-1" /> 목록으로 돌아가기
                         </Link>
                         <Link
-                            href={`/inquiries?subject=${encodeURIComponent(project.title)}`}
-                            className="w-full sm:w-auto px-10 py-4 rounded-full bg-[#00A9CE] text-white font-extrabold text-lg hover:bg-[#008BB0] hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(0,169,206,0.4)] flex items-center justify-center gap-3 cursor-pointer"
+                            href={`/contact?subject=${encodeURIComponent(project.title + ' 시공 사례 관련 문의드립니다.')}`}
+                            className="w-full sm:w-auto px-6 py-4 rounded-full bg-[#00A9CE] text-white font-medium text-base hover:bg-[#008BB0] hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(0,169,206,0.4)] flex items-center justify-center gap-3 cursor-pointer"
                         >
-                            이 시스템 문의하기 <ArrowRight size={22} />
+                            견적 상담하기 <ArrowRight size={22} />
                         </Link>
                     </div>
                 </main>
@@ -163,8 +163,8 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
                     <ArrowLeft size={22} />
                 </Link>
                 <Link
-                    href={`/inquiries?subject=${encodeURIComponent(project.title)}`}
-                    className="flex-1 py-4 rounded-full bg-[#00A9CE] text-white font-bold text-lg hover:bg-[#008BB0] transition-all shadow-[0_0_20px_rgba(0,169,206,0.3)] flex items-center justify-center gap-2"
+                    href={`/contact?subject=${encodeURIComponent(project.title + ' 시공 사례 관련 문의드립니다.')}`}
+                    className="flex-1 py-4 rounded-full bg-[#00A9CE] text-white font-medium text-base hover:bg-[#008BB0] transition-all shadow-[0_0_20px_rgba(0,169,206,0.3)] flex items-center justify-center gap-2"
                 >
                     견적 상담하기 <ArrowRight size={20} />
                 </Link>

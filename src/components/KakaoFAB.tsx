@@ -12,7 +12,7 @@ export default function KakaoFAB() {
 
     // Conditionally adjust position for detail pages that have a sticky bottom bar
     const isDetailPage = pathname?.includes('/product/') || pathname?.includes('/portfolio/');
-    const bottomClass = isDetailPage ? 'bottom-28' : 'bottom-8';
+    const bottomClass = isDetailPage ? 'bottom-28' : 'bottom-6';
 
     return (
         <div className={`fixed ${bottomClass} md:bottom-10 right-6 md:right-10 z-[70] flex flex-col items-end pointer-events-none transition-all duration-300`}>

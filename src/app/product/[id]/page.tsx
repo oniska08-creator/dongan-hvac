@@ -86,15 +86,15 @@ export default async function ProductDetailPage(props: ProductPageProps) {
                         <div className="hidden md:flex items-center gap-6 mt-16">
                             <Link
                                 href="/products"
-                                className="rounded-full px-8 py-4 border border-slate-700 bg-transparent text-slate-300 hover:bg-slate-800 hover:text-white transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold tracking-wide"
+                                className="rounded-full px-6 py-4 bg-white border border-slate-300 text-slate-900 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 group cursor-pointer font-medium text-base shadow-sm"
                             >
-                                <ArrowLeft size={20} className="transition-transform group-hover:-translate-x-1" /> 목록으로
+                                <ArrowLeft size={20} className="transition-transform group-hover:-translate-x-1" /> 목록으로 돌아가기
                             </Link>
                             <Link
-                                href="/contact"
-                                className="px-10 py-4 rounded-full bg-cyan-500 text-white font-extrabold text-lg hover:bg-cyan-400 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(6,182,212,0.4)] flex items-center justify-center gap-3 cursor-pointer"
+                                href={`/contact?subject=${encodeURIComponent(product.name + ' 제품 관련 문의드립니다.')}`}
+                                className="px-6 py-4 rounded-full bg-[#00A9CE] text-white font-medium text-base hover:bg-[#008BB0] hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(0,169,206,0.4)] flex items-center justify-center gap-3 cursor-pointer"
                             >
-                                빠른 견적 상담하기 <ArrowRight size={22} />
+                                견적 상담하기 <ArrowRight size={22} />
                             </Link>
                         </div>
                     </ProductGallery>
@@ -105,14 +105,14 @@ export default async function ProductDetailPage(props: ProductPageProps) {
             <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-950/90 backdrop-blur-xl border-t border-slate-800/60 z-[60] flex items-center justify-between gap-4 md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
                 <Link
                     href="/products"
-                    className="p-4 rounded-full border border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 transition-colors flex items-center justify-center shrink-0"
+                    className="p-4 rounded-full border border-slate-300 bg-white text-slate-900 hover:bg-slate-50 transition-colors flex items-center justify-center shrink-0"
                     aria-label="목록으로"
                 >
                     <ArrowLeft size={22} />
                 </Link>
                 <Link
-                    href="/contact"
-                    className="flex-1 py-4 rounded-full bg-cyan-500 text-white font-bold text-lg hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center justify-center gap-2"
+                    href={`/contact?subject=${encodeURIComponent(product.name + ' 제품 관련 문의드립니다.')}`}
+                    className="flex-1 py-4 rounded-full bg-[#00A9CE] text-white font-medium text-base hover:bg-[#008BB0] transition-all shadow-[0_0_20px_rgba(0,169,206,0.3)] flex items-center justify-center gap-2"
                 >
                     견적 상담하기 <ArrowRight size={20} />
                 </Link>
