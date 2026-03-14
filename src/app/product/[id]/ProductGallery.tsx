@@ -59,7 +59,7 @@ export default function ProductGallery({ images, fallbackUrl, name, children }: 
                  * 모바일: 캐러셀 (Edge-to-Edge) 
                  * 데스크탑: 고정형 메인 뷰어 
                  */}
-                <div className="relative w-full overflow-hidden border-b border-slate-800/80 md:border-none md:bg-slate-50/5 md:rounded-3xl md:aspect-square flex items-center justify-center md:border md:border-slate-800 md:shadow-2xl group cursor-pointer">
+                <div className="relative w-full overflow-hidden border-b border-slate-800/80 md:border-none md:bg-black md:rounded-3xl md:aspect-square flex items-center justify-center md:border md:border-slate-800 md:shadow-2xl group cursor-pointer">
                     
                     {/* 데스크탑 뷰어 */}
                     <div 
@@ -92,13 +92,13 @@ export default function ProductGallery({ images, fallbackUrl, name, children }: 
                             allImages.map((img, idx) => (
                                 <div 
                                     key={idx} 
-                                    className="w-full h-full flex-shrink-0 snap-center bg-slate-900/50 flex items-center justify-center"
+                                    className="w-full h-full flex-shrink-0 snap-center bg-black flex items-center justify-center"
                                     onClick={() => handleImageClick(img)}
                                 >
                                     <img 
                                         src={img} 
                                         alt={`${name} ${idx + 1}`} 
-                                        className="w-full h-full object-cover md:object-contain drop-shadow-2xl" 
+                                        className="w-full h-full object-contain drop-shadow-2xl" 
                                     />
                                 </div>
                             ))

@@ -11,12 +11,15 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
 
                 {/* 2. Hero Section */}
                 <section className="relative h-[60vh] w-full flex items-center justify-center pt-24">
-                    {/* Background Image */}
-                    <div
-                        className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
-                        style={{ backgroundImage: `url('${project.imageUrl || "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop"}')` }}
-                    />
-                    <div className="absolute inset-0 bg-slate-950/70 z-10" />
+                    {/* Background Image Container */}
+                    <div className="absolute inset-0 w-full h-full bg-black z-0 flex items-center justify-center">
+                        <img
+                            src={project.imageUrl || "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop"}
+                            alt={project.title}
+                            className="w-full h-full object-contain"
+                        />
+                    </div>
+                    <div className="absolute inset-0 bg-slate-950/40 z-10" />
 
                     <div className="relative z-20 text-center px-6 max-w-5xl">
                         <motion.h1
@@ -102,7 +105,9 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
                                     transition={{ delay: idx * 0.1 }}
                                     className="h-80 rounded-2xl overflow-hidden bg-slate-800"
                                 >
-                                    <img src={imgSrc} alt={`현장사진 ${idx + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+                                    <div className="h-full w-full bg-black flex items-center justify-center p-2">
+                                    <img src={imgSrc} alt={`현장사진 ${idx + 1}`} className="w-full h-full object-contain hover:scale-105 transition-transform duration-700" />
+                                </div>
                                 </motion.div>
                             ))}
                         </div>
@@ -118,7 +123,7 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
                         </Link>
                         <Link
                             href={`/inquiries?subject=${encodeURIComponent(project.title)}`}
-                            className="w-full sm:w-auto px-10 py-4 rounded-full bg-blue-600 text-white font-extrabold text-lg hover:bg-blue-500 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 cursor-pointer"
+                            className="w-full sm:w-auto px-10 py-4 rounded-full bg-[#00A9CE] text-white font-extrabold text-lg hover:bg-[#008BB0] hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(0,169,206,0.4)] flex items-center justify-center gap-3 cursor-pointer"
                         >
                             이 시스템 문의하기 <ArrowRight size={22} />
                         </Link>
@@ -159,7 +164,7 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
                 </Link>
                 <Link
                     href={`/inquiries?subject=${encodeURIComponent(project.title)}`}
-                    className="flex-1 py-4 rounded-full bg-cyan-500 text-slate-900 font-bold text-lg hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center justify-center gap-2"
+                    className="flex-1 py-4 rounded-full bg-[#00A9CE] text-white font-bold text-lg hover:bg-[#008BB0] transition-all shadow-[0_0_20px_rgba(0,169,206,0.3)] flex items-center justify-center gap-2"
                 >
                     견적 상담하기 <ArrowRight size={20} />
                 </Link>
