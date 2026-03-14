@@ -50,6 +50,12 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
                                 alt={project.title} 
                                 className="w-full h-full object-contain"
                                 draggable={false}
+                                loading="eager"
+                                style={{ 
+                                    transform: 'translate3d(0,0,0)',
+                                    willChange: 'transform',
+                                    backfaceVisibility: 'hidden'
+                                }}
                             />
                         ) : (
                             <div className="flex flex-col items-center text-slate-700">

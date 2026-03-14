@@ -161,6 +161,12 @@ export default function GalleryThumbnailSlider({ images, onThumbnailClick, activ
                                 ? "border-cyan-400 opacity-100 scale-105 shadow-[0_0_20px_rgba(8,145,178,0.4)] ring-4 ring-cyan-400/20" 
                                 : "border-slate-800 opacity-60 hover:opacity-100 hover:border-slate-600"
                         }`}
+                        style={{ 
+                            transform: 'translate3d(0,0,0)',
+                            willChange: 'transform',
+                            backfaceVisibility: 'hidden',
+                            WebkitBackfaceVisibility: 'hidden'
+                        }}
                         onDragStart={(e) => e.preventDefault()}
                     >
                         <img
@@ -168,6 +174,7 @@ export default function GalleryThumbnailSlider({ images, onThumbnailClick, activ
                             alt={`${name} ${idx + 1}`}
                             className="w-full h-full object-contain bg-black p-4 pointer-events-none select-none"
                             draggable={false}
+                            loading="lazy"
                             onDragStart={(e) => e.preventDefault()}
                         />
                     </div>
