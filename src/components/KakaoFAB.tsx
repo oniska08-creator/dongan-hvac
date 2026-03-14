@@ -18,7 +18,7 @@ export default function KakaoFAB() {
         <div className={`fixed ${bottomClass} md:bottom-10 right-6 md:right-10 z-[70] flex flex-col items-end pointer-events-none transition-all duration-300`}>
 
             {/* Tooltip */}
-            <div className="relative mb-3 animate-bounce">
+            <div className="relative mb-3">
                 <div className="bg-slate-800 text-white text-sm font-bold px-4 py-2 rounded-2xl shadow-lg border border-slate-700 pointer-events-auto cursor-pointer">
                     빠른 견적 문의
                 </div>
@@ -28,7 +28,7 @@ export default function KakaoFAB() {
 
             {/* Button Wrapper */}
             <div className="relative flex items-center justify-center pointer-events-auto">
-                {/* Main FAB Link with Breathing Effect */}
+                {/* Main FAB Link with Extremely Subtle Breathing Effect */}
                 <a
                     href="http://pf.kakao.com/_YOUR_KAKAO_ID/chat"
                     target="_blank"
@@ -36,7 +36,8 @@ export default function KakaoFAB() {
                     className="relative w-16 h-16 bg-[#FEE500] rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.3)] flex items-center justify-center transition-transform hover:scale-110 duration-300 ring-2 ring-transparent hover:ring-[#FEE500]/50 animate-breathing"
                     style={{ 
                         willChange: 'transform',
-                        transformStyle: 'preserve-3d'
+                        transformStyle: 'preserve-3d',
+                        WebkitTransformStyle: 'preserve-3d'
                     }}
                     aria-label="카카오톡 상담하기"
                 >
@@ -54,15 +55,18 @@ export default function KakaoFAB() {
                     </svg>
                 </a>
                 
-                {/* Custom Breathing Animation Style */}
+                {/* 
+                    Custom Breathing Animation Style 
+                    Subtle scale change (1.0 -> 1.05) with 4s duration for a natural feel.
+                */}
                 <style jsx global>{`
                     @keyframes breathing {
                         0% { transform: scale(1); }
-                        50% { transform: scale(1.08); }
+                        50% { transform: scale(1.05); }
                         100% { transform: scale(1); }
                     }
                     .animate-breathing {
-                        animation: breathing 3s ease-in-out infinite;
+                        animation: breathing 4s ease-in-out infinite;
                     }
                 `}</style>
             </div>
