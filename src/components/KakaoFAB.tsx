@@ -11,7 +11,7 @@ export default function KakaoFAB() {
     }
 
     return (
-        <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end pointer-events-none">
+        <div className="fixed bottom-24 md:bottom-8 right-6 md:right-8 z-[70] flex flex-col items-end pointer-events-none">
 
             {/* Tooltip */}
             <div className="relative mb-3 animate-bounce">

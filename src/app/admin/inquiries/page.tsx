@@ -201,20 +201,20 @@ export default function AdminInquiriesPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="p-6 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-3 flex-shrink-0">
+                        <div className="p-6 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-end gap-3 flex-shrink-0">
                             {selectedInquiry.status === "대기중" ? (
                                 <button
                                     onClick={() => handleCompleteStatus(selectedInquiry.id)}
-                                    className="px-6 py-3 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md flex-1 cursor-pointer"
+                                    className="w-full sm:flex-1 px-6 py-3 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer order-1 sm:order-1"
                                 >
                                     상담 완료 처리
                                 </button>
                             ) : (
-                                <div className="text-slate-500 font-bold flex-1 text-sm md:text-base">상담 완료 건</div>
+                                <div className="text-slate-500 font-bold flex-1 text-sm md:text-base order-1 sm:order-1">상담 완료 건</div>
                             )}
                             <button
                                 onClick={closeModal}
-                                className="px-6 py-3 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors w-24 md:w-32 cursor-pointer"
+                                className="w-full sm:w-32 px-6 py-3 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors cursor-pointer order-2 sm:order-2"
                             >
                                 닫기
                             </button>

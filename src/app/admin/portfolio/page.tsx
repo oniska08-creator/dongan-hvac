@@ -438,12 +438,12 @@ export default function AdminPortfolioPage() {
                         </div>
 
                         {/* Fixed Footer */}
-                        <div className="p-6 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-3 flex-shrink-0">
+                        <div className="p-6 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-end gap-3 flex-shrink-0">
                             <button
                                 type="submit"
                                 form="portfolioForm"
                                 disabled={isSaving || isUploading}
-                                className="px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer disabled:bg-slate-400"
+                                className="w-full sm:w-auto px-6 py-2.5 rounded-lg font-bold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-md cursor-pointer disabled:bg-slate-400 order-1 sm:order-2"
                             >
                                 {isSaving ? (progressText || '저장 중...') : isUploading ? '이미지 업로드 중...' : '저장'}
                             </button>
@@ -451,7 +451,7 @@ export default function AdminPortfolioPage() {
                                 type="button"
                                 onClick={closeModal}
                                 disabled={isSaving}
-                                className="px-6 py-2.5 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors cursor-pointer shadow-sm disabled:cursor-not-allowed"
+                                className="w-full sm:w-auto px-6 py-2.5 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-colors cursor-pointer shadow-sm disabled:cursor-not-allowed order-2 sm:order-1"
                             >
                                 취소
                             </button>
