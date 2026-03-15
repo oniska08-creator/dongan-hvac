@@ -39,18 +39,17 @@ export default function ContactPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-cyan-500/30">
+        <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500/30">
             {/* Header is handled globally in layout.tsx via ClientHeader */}
 
             {/* 2. Sub-Hero Section */}
-            <section className="relative h-[40vh] w-full flex items-center justify-center bg-slate-800 pt-24">
-                <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 to-slate-900 z-10" />
+            <section className="relative w-full flex flex-col items-center justify-center pt-24 md:pt-32 pb-4 md:pb-6">
                 <div className="relative z-20 text-center px-4">
                     <motion.h1
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 tracking-tight"
+                        className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight drop-shadow-xl"
                     >
                         고객지원 및 문의
                     </motion.h1>
@@ -58,14 +57,14 @@ export default function ContactPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-lg text-slate-300 font-light max-w-2xl mx-auto break-keep"
+                        className="text-lg text-slate-400 font-light max-w-2xl mx-auto break-keep"
                     >
                         전문가의 맞춤 컨설팅을 지금 시작하세요.
                     </motion.p>
                 </div>
             </section>
 
-            <main className="py-24 px-6 md:px-12 max-w-7xl mx-auto space-y-24">
+            <main className="py-6 md:py-12 px-6 max-w-7xl mx-auto space-y-6 md:space-y-10">
                 {/* 3. Content 1 (연락처 카드) */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <motion.div
@@ -210,27 +209,6 @@ export default function ContactPage() {
                 </div>
             </main>
 
-            {/* Footer */}
-            <footer className="bg-slate-950 py-12 md:py-16 px-6 border-t border-slate-900 mt-10">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 justify-between items-center sm:items-start md:items-center">
-                    <div className="text-center sm:text-left">
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 md:mb-4 tracking-tight">DongAn <span className="text-cyan-400 font-light">HVAC</span></h2>
-                        <p className="text-slate-400 leading-relaxed font-light break-keep text-sm md:text-base">
-                            공간의 쾌적함을 넘어, 비즈니스의 성공을 돕는 최적의 공조 파트너입니다.
-                        </p>
-                    </div>
-                    <div className="text-center sm:text-left md:text-right flex flex-col gap-2 text-slate-400 font-light text-sm md:text-[15px]">
-                        <div className="flex flex-col sm:flex-row sm:gap-4 md:flex-col lg:flex-row">
-                            <span>Email: contact@dongan-hvac.com</span>
-                            <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-                            <span>Tel: 02-123-4567</span>
-                            <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-                            <span>Fax: 02-123-4568</span>
-                        </div>
-                        <p className="pt-2 md:pt-4 border-t border-slate-800/50 mt-2">Copyright &copy; 2026 DongAn HVAC. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
         </div>
     );
 }

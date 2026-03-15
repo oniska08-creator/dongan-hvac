@@ -55,7 +55,7 @@ export default async function ProductsPage() {
             {/* Header is handled globally in layout.tsx via ClientHeader */}
 
             {/* 2. Sub-Hero Section */}
-            <section className="relative w-full flex flex-col items-center justify-center bg-slate-950 pt-32 pb-16">
+            <section className="relative w-full flex flex-col items-center justify-center pt-24 md:pt-32 pb-4 md:pb-6">
                 <div className="relative z-20 text-center px-4">
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight drop-shadow-xl">
                         완벽한 공조를 위한 <br className="md:hidden" />
@@ -68,7 +68,7 @@ export default async function ProductsPage() {
             </section>
 
             {/* 3. Netflix-Style Showcase Content Section */}
-            <main className="py-12 mx-auto w-full space-y-20 pb-32">
+            <main className="py-6 md:py-12 px-6 max-w-7xl mx-auto space-y-6 md:space-y-10">
                 {Object.keys(groupedProducts).length === 0 && (
                     <div className="text-center text-slate-500 py-12 flex flex-col items-center justify-center min-h-[30vh]">
                         <ImageOff size={48} className="mb-4 text-slate-700" />
@@ -81,27 +81,6 @@ export default async function ProductsPage() {
                 ))}
             </main>
 
-            {/* Footer */}
-            <footer className="bg-slate-950 py-12 md:py-16 px-6 border-t border-slate-900 mt-10">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 justify-between items-center sm:items-start md:items-center">
-                    <div className="text-center sm:text-left">
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 md:mb-4 tracking-tight">DongAn <span className="text-cyan-400 font-light">HVAC</span></h2>
-                        <p className="text-slate-400 leading-relaxed font-light break-keep text-sm md:text-base">
-                            공간의 쾌적함을 넘어, 비즈니스의 성공을 돕는 최적의 공조 파트너입니다.
-                        </p>
-                    </div>
-                    <div className="text-center sm:text-left md:text-right flex flex-col gap-2 text-slate-400 font-light text-sm md:text-[15px]">
-                        <div className="flex flex-col sm:flex-row sm:gap-4 md:flex-col lg:flex-row">
-                            <span>Email: contact@dongan-hvac.com</span>
-                            <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-                            <span>Tel: 02-123-4567</span>
-                            <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-                            <span>Fax: 02-123-4568</span>
-                        </div>
-                        <p className="pt-2 md:pt-4 border-t border-slate-800/50 mt-2">Copyright &copy; 2026 DongAn HVAC. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
         </div>
     );
 }

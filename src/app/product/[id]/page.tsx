@@ -1,9 +1,8 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ImageOff, CheckCircle2, Menu, ArrowRight } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ArrowRight } from "lucide-react";
 import ProductGallery from "./ProductGallery";
-import ClientHeader from "@/components/ClientHeader";
 
 export const dynamic = 'force-dynamic';
 
@@ -43,37 +42,37 @@ export default async function ProductDetailPage(props: ProductPageProps) {
 
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100 font-sans tracking-tight">
-            {/* 페이지 콘텐츠 (레이아웃 보호 영역) */}
-            <div className="relative z-10 pt-20 md:pt-28 pb-32 md:pb-16 px-0 md:px-6">
-                {/* 메인 2단 분할 영역 */}
-                <main className="max-w-7xl mx-auto md:px-6 pb-12">
+            {/* 페이지 콘텐츠 */}
+            <div className="relative pt-20 md:pt-24 pb-2 md:pb-4">
+                <main className="max-w-7xl mx-auto px-6">
                     <ProductGallery
                         images={(product as any).images as string[]}
                         fallbackUrl={product.imageUrl}
                         name={product.name}
                     >
-                        <span className="text-cyan-400 font-bold tracking-widest text-xs md:text-sm lg:text-base mb-4 uppercase drop-shadow-[0_0_8px_rgba(8,145,178,0.5)]">
+                        <span className="text-cyan-400 font-bold tracking-widest text-sm md:text-base lg:text-lg mb-4 uppercase drop-shadow-[0_0_8px_rgba(8,145,178,0.5)]">
                             {product.category || "General"}
                         </span>
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-tight mb-8 tracking-tighter drop-shadow-lg">
+                        {/* Title - Hidden on PC here because ProductGallery handles it centrally */}
+                        <h1 className="sm:hidden text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-tight mb-8 tracking-tighter drop-shadow-lg">
                             {product.name}
                         </h1>
-                        <p className="text-slate-400 text-lg md:text-xl font-light leading-relaxed mb-12 break-keep">
+                        <p className="text-slate-400 text-xl md:text-2xl font-light leading-relaxed mb-6 break-keep">
                             {product.description || product.features || "동안공조가 제안하는 최적의 공조 솔루션으로 공간의 가치를 높여보세요."}
                         </p>
 
                         {/* 상세 스펙 표 */}
                         {specs.length > 0 && (
-                            <div className="pt-6 border-t border-slate-800/50 md:border-none">
-                                <h3 className="text-2xl font-bold text-white mb-8 tracking-tight">제품 상세 스펙</h3>
-                                <ul className="space-y-6">
+                            <div className="pt-0">
+                                <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">상세내용</h3>
+                                <ul className="space-y-4">
                                     {specs.map((spec, idx) => (
-                                        <li key={idx} className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 pb-6 border-b border-slate-800/30 last:border-0 last:pb-0">
-                                            <span className="text-slate-500 font-semibold sm:w-1/3 flex items-center gap-3 tracking-wide">
-                                                <CheckCircle2 size={18} className="text-cyan-600" />
+                                        <li key={idx} className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 last:pb-0">
+                                            <span className="text-slate-500 font-semibold sm:w-1/3 flex items-center gap-3 tracking-wide text-lg md:text-xl">
+                                                <CheckCircle2 size={20} className="text-cyan-600" />
                                                 {spec.key}
                                             </span>
-                                            <span className="text-slate-200 font-medium sm:w-2/3 break-words text-lg">
+                                            <span className="text-slate-200 font-normal sm:w-2/3 break-words text-xl md:text-2xl tabular-nums">
                                                 {spec.value}
                                             </span>
                                         </li>
@@ -81,41 +80,46 @@ export default async function ProductDetailPage(props: ProductPageProps) {
                                 </ul>
                             </div>
                         )}
-
-                        {/* Call to Action 버튼 (Desktop) */}
-                        <div className="hidden md:flex items-center gap-6 mt-16">
-                            <Link
-                                href="/products"
-                                className="rounded-full px-6 py-4 bg-white border border-slate-300 text-slate-900 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 group cursor-pointer font-medium text-base shadow-sm"
-                            >
-                                <ArrowLeft size={20} className="transition-transform group-hover:-translate-x-1" /> 목록으로 돌아가기
-                            </Link>
-                            <Link
-                                href={`/contact?subject=${encodeURIComponent(product.name + ' 제품 관련 문의드립니다.')}`}
-                                className="px-6 py-4 rounded-full bg-[#00A9CE] text-white font-medium text-base hover:bg-[#008BB0] hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(0,169,206,0.4)] flex items-center justify-center gap-3 cursor-pointer"
-                            >
-                                견적 상담하기 <ArrowRight size={22} />
-                            </Link>
-                        </div>
+                        
                     </ProductGallery>
+
+                    {/* [PC ONLY] Final Action Buttons - Catalogue Closing Style */}
+                    <div className="hidden sm:flex items-center justify-center gap-6 mt-4 md:mt-6 pt-4 md:pt-6 pb-8 md:pb-12 max-w-7xl mx-auto">
+                        <Link 
+                            href="/products"
+                            className="px-10 py-5 rounded-2xl border border-slate-700 bg-slate-900/50 text-slate-300 hover:bg-slate-800 hover:text-white transition-all font-bold flex items-center gap-3 group text-lg"
+                        >
+                            <ArrowLeft size={22} className="transition-transform group-hover:-translate-x-1" />
+                            목록으로 돌아가기
+                        </Link>
+                        <Link 
+                            href={`/contact?subject=${encodeURIComponent(product.name + ' 제품 관련 문의드립니다.')}`}
+                            className="px-14 py-5 rounded-2xl bg-cyan-500 text-white font-black text-xl hover:bg-cyan-400 transition-all shadow-[0_15px_35px_rgba(8,145,178,0.3)] active:scale-95"
+                        >
+                            견적 상담하기
+                        </Link>
+                    </div>
                 </main>
             </div>
 
-            {/* 고정형 액션 버튼 (Floating Action Button - Mobile Sticky) */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-950/90 backdrop-blur-xl border-t border-slate-800/60 z-[60] flex items-center justify-between gap-4 md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
-                <Link
-                    href="/products"
-                    className="p-4 rounded-full border border-slate-300 bg-white text-slate-900 hover:bg-slate-50 transition-colors flex items-center justify-center shrink-0"
-                    aria-label="목록으로"
-                >
-                    <ArrowLeft size={22} />
-                </Link>
-                <Link
-                    href={`/contact?subject=${encodeURIComponent(product.name + ' 제품 관련 문의드립니다.')}`}
-                    className="flex-1 py-4 rounded-full bg-[#00A9CE] text-white font-medium text-base hover:bg-[#008BB0] transition-all shadow-[0_0_20px_rgba(0,169,206,0.3)] flex items-center justify-center gap-2"
-                >
-                    견적 상담하기 <ArrowRight size={20} />
-                </Link>
+            {/* [Unified Fixed Bottom Bar] - Mobile Only (md:hidden) */}
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/95 backdrop-blur-3xl border-t border-slate-800/60 z-[60] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] md:hidden">
+                <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+                    <Link
+                        href="/products"
+                        className="p-4 md:px-8 md:py-5 rounded-2xl border border-slate-700 bg-slate-800/50 text-slate-300 hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center shrink-0 active:scale-95 group font-bold"
+                        aria-label="목록으로"
+                    >
+                        <ArrowLeft size={24} className="md:mr-2 transition-transform group-hover:-translate-x-1" />
+                        <span className="hidden md:inline">목록으로 돌아가기</span>
+                    </Link>
+                    <Link
+                        href={`/contact?subject=${encodeURIComponent(product.name + ' 제품 관련 문의드립니다.')}`}
+                        className="flex-1 md:flex-none md:px-12 py-4 md:py-5 rounded-2xl bg-cyan-500 text-white font-black text-lg flex items-center justify-center gap-3 shadow-[0_10px_25px_rgba(8,145,178,0.3)] hover:bg-cyan-400 active:scale-[0.98] transition-all"
+                    >
+                        견적 상담하기 <ArrowRight size={22} />
+                    </Link>
+                </div>
             </div>
         </div>
     );

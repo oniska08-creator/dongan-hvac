@@ -20,7 +20,7 @@ export default function ClientPortfolio({ portfolios: dbPortfolios }: { portfoli
     const renderCardContent = (item: any) => (
         <div className="group flex flex-col w-full h-full cursor-pointer">
             {/* Image Container (16:9 ratio) */}
-            <div className="w-full aspect-video relative overflow-hidden rounded-2xl shadow-lg border border-slate-800/60 bg-slate-900 leading-none">
+            <div className="w-full aspect-video relative overflow-hidden rounded-2xl shadow-xl border border-slate-800/60 bg-slate-900 leading-none mb-5">
                 {item.imageUrl ? (
                     <Image
                         src={item.imageUrl}
@@ -32,28 +32,15 @@ export default function ClientPortfolio({ portfolios: dbPortfolios }: { portfoli
                 ) : (
                     <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-slate-800 text-slate-500 transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-in-out">
                         <ImageOff size={48} className="mb-3 opacity-60" />
-                        <span className="text-sm font-semibold tracking-widest uppercase opacity-60">DongAn HVAC</span>
+                        <span className="text-base font-semibold tracking-widest uppercase opacity-60">DongAn HVAC</span>
                     </div>
                 )}
             </div>
 
-            {/* Text Area */}
-            <h3 className="text-xl font-bold text-white mt-4 group-hover:text-cyan-400 transition-colors duration-300">
+            {/* Title Area - Minimalist */}
+            <h3 className="text-2xl md:text-3xl font-black text-white leading-tight group-hover:text-cyan-400 transition-colors duration-300 tracking-tight break-keep text-center px-4">
                 {item.title}
             </h3>
-            <div className="text-sm text-gray-400 mt-2 flex gap-3 items-center flex-wrap">
-                {item.date && <span>{item.date}</span>}
-                {item.clientName && (
-                    <span className="px-2 py-1 bg-cyan-900/50 text-cyan-400 rounded-md text-xs">
-                        {item.clientName}
-                    </span>
-                )}
-                {item.area && (
-                    <span className="px-2 py-1 bg-slate-800/80 text-slate-300 rounded-md text-xs border border-slate-700/50">
-                        {item.area}
-                    </span>
-                )}
-            </div>
         </div>
     );
 
@@ -62,7 +49,7 @@ export default function ClientPortfolio({ portfolios: dbPortfolios }: { portfoli
             {/* Header is handled globally in layout.tsx via ClientHeader */}
 
             {/* 2. Sub-Hero Section */}
-            <section className="relative w-full flex flex-col items-center justify-center bg-slate-950 pt-32 pb-16">
+            <section className="relative w-full flex flex-col items-center justify-center pt-24 md:pt-32 pb-4 md:pb-6">
                 <div className="relative z-20 text-center px-4">
                     <motion.h1
                         initial={{ opacity: 0, y: 30 }}
@@ -77,7 +64,7 @@ export default function ClientPortfolio({ portfolios: dbPortfolios }: { portfoli
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-lg text-slate-400 font-light max-w-2xl mx-auto break-keep"
+                        className="text-xl text-slate-400 font-light max-w-2xl mx-auto break-keep"
                     >
                         최고의 기술력과 타협 없는 철학이 완성한 동안공조의 하이엔드 시공 파노라마.
                     </motion.p>
@@ -95,7 +82,7 @@ export default function ClientPortfolio({ portfolios: dbPortfolios }: { portfoli
 
             {/* 3. Main Grid & Load More */}
             {dataList.length > 0 && (
-                <main className="px-6 md:px-12 max-w-[1400px] mx-auto pb-32">
+                <main className="py-6 md:py-12 px-6 max-w-7xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {dataList.slice(0, visibleCount).map((project, index) => (
                             <Link href={`/portfolio/${project.id}`} key={project.id}>
@@ -126,27 +113,6 @@ export default function ClientPortfolio({ portfolios: dbPortfolios }: { portfoli
                 </main>
             )}
 
-            {/* Footer */}
-            <footer className="bg-slate-950 py-12 md:py-16 px-6 border-t border-slate-900 mt-10">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 justify-between items-center sm:items-start md:items-center">
-                    <div className="text-center sm:text-left">
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 md:mb-4 tracking-tight">DongAn <span className="text-cyan-400 font-light">HVAC</span></h2>
-                        <p className="text-slate-400 leading-relaxed font-light break-keep text-sm md:text-base">
-                            공간의 쾌적함을 넘어, 비즈니스의 성공을 돕는 최적의 공조 파트너입니다.
-                        </p>
-                    </div>
-                    <div className="text-center sm:text-left md:text-right flex flex-col gap-2 text-slate-400 font-light text-sm md:text-[15px]">
-                        <div className="flex flex-col sm:flex-row sm:gap-4 md:flex-col lg:flex-row">
-                            <span>Email: contact@dongan-hvac.com</span>
-                            <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-                            <span>Tel: 02-123-4567</span>
-                            <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-                            <span>Fax: 02-123-4568</span>
-                        </div>
-                        <p className="pt-2 md:pt-4 border-t border-slate-800/50 mt-2">Copyright &copy; 2026 DongAn HVAC. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
         </div>
     );
 }

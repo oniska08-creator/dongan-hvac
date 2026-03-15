@@ -54,3 +54,25 @@ model User {
   role      String   @default("ADMIN")
   createdAt DateTime @default(now())
 }
+
+model CompanyInfo {
+  id           Int      @id @default(1)
+  title        String   @default("회사소개")
+  subTitle     String   @default("20년의 고집, 보이지 않는 곳에서 공간의 완벽을 만듭니다.")
+  description  String   @default("") @db.Text
+  contentTitle String   @default("최적의 공기를 설계하는 완벽한 기술력")
+  content1     String   @default("공기는 생명이며, 최적의 환경은 비즈니스의 성공과 삶의 질을 결정짓는 핵심 요소입니다. 우리는 단순히 기계적인 시공을 넘어, 당신의 공간에 가장 적합한 숨결을 예술적으로 디자인합니다.")
+  content2     String   @default("국내 최고 수준의 공조 엔지니어링 역량을 바탕으로 냉난방 에너지 효율을 극대화하고, 사후 관리까지 책임지는 철저한 장인정신을 통해 보이지 않는 곳에서 공간의 완벽함을 완성합니다.")
+  imageUrl     String   @default("/images/about/hvac_main.png")
+  history      Json?    // 연혁 데이터
+  updatedAt    DateTime @updatedAt @default(now())
+}
+
+model History {
+  id        Int      @id @default(autoincrement())
+  year      String
+  title     String
+  desc      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}

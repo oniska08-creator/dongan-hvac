@@ -20,7 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }, [status, session, router]);
 
     if (status === 'loading') {
-        return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white font-sans text-xl font-bold">인증 정보 확인 중...</div>;
+        return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white font-sans text-xl font-bold">인증 정보 확인 중...</div>;
     }
 
     if (status === 'unauthenticated' || (session?.user?.role !== 'ADMIN' && session?.user?.role !== 'SUPER_ADMIN')) {
@@ -28,9 +28,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex">
+        <div className="min-h-screen bg-white text-slate-900 font-sans flex">
             {/* Mobile Header */}
-            <header className="md:hidden fixed top-0 left-0 w-full bg-slate-900 text-white z-[60] flex items-center justify-between p-4 shadow-md border-b border-slate-800">
+            <header className="md:hidden fixed top-0 left-0 w-full bg-slate-900/95 backdrop-blur-md text-white z-[60] flex items-center justify-between p-4 shadow-md border-b border-slate-800">
                 <div className="text-lg font-extrabold tracking-tight">
                     DongAn <span className="text-cyan-400 font-light">Admin</span>
                 </div>
@@ -51,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 />
             )}
 
-            <aside className={`fixed top-0 left-0 w-64 h-full bg-slate-900 text-white flex flex-col z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <aside className={`fixed top-0 left-0 w-64 h-full bg-slate-900 text-white flex flex-col z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 overflow-y-auto border-r border-slate-800 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 {/* 모바일 헤더 가림 방지 스페이서 */}
                 <div className="h-16 md:hidden flex-shrink-0"></div>
 
@@ -64,6 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <Link onClick={() => setIsSidebarOpen(false)} prefetch={true} href="/admin/products" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/products' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>제품 관리</Link>
                     <Link onClick={() => setIsSidebarOpen(false)} prefetch={true} href="/admin/portfolio" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/portfolio' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>시공사례 관리</Link>
                     <Link onClick={() => setIsSidebarOpen(false)} prefetch={true} href="/admin/inquiries" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/inquiries' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>문의 내역</Link>
+                    <Link onClick={() => setIsSidebarOpen(false)} prefetch={true} href="/admin/company" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/company' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>회사정보 관리</Link>
                     {session?.user?.role === 'SUPER_ADMIN' && (
                         <Link onClick={() => setIsSidebarOpen(false)} prefetch={true} href="/admin/settings" className={`block px-4 py-3 rounded-lg transition-colors text-sm cursor-pointer ${pathname === '/admin/settings' ? 'bg-cyan-600 text-white font-bold tracking-wide' : 'hover:bg-slate-800 font-medium'}`}>관리자 설정</Link>
                     )}
@@ -87,7 +88,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </aside>
 
             {/* 우측 메인 콘텐츠 */}
-            <main className="w-full min-h-screen bg-slate-50 transition-all md:ml-64 px-4 pb-8 pt-24 md:p-10 md:pt-12">
+            <main className="w-full min-h-screen bg-white transition-all md:ml-64 px-4 pb-8 pt-20 md:p-6 md:pt-6">
                 <AutoLogoutWrapper>
                     {children}
                 </AutoLogoutWrapper>

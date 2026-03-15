@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { ImageOff, X } from 'lucide-react';
+import { ImageOff, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import GalleryThumbnailSlider from '@/components/GalleryThumbnailSlider';
 
 interface ProductGalleryProps {
@@ -30,97 +31,192 @@ export default function ProductGallery({ images, fallbackUrl, name, children }: 
     }, []);
 
     const handleThumbnailAction = (img: string, idx: number) => {
-        // 1. Update main image immediately
         setSelectedImage(img);
         setActiveIndex(idx);
         
-        // 2. Open modal with a tiny delay to ensure interaction clarity
-        // This helps the browser prioritize the state change of the main image first
-        setSelectedModalImage(img);
-        setTimeout(() => {
-            setIsModalOpen(true);
-        }, 10);
+        // Only open modal on mobile (sm breakpoint is 640px)
+        if (window.innerWidth < 640) {
+            setSelectedModalImage(img);
+            setTimeout(() => {
+                setIsModalOpen(true);
+            }, 10);
+        }
+    };
+
+    // Mobile Swipe Handler
+    const onDragEnd = (event: any, info: any) => {
+        const swipeThreshold = 50;
+        if (info.offset.x < -swipeThreshold) {
+            if (activeIndex < allImages.length - 1) {
+                const newIdx = activeIndex + 1;
+                setActiveIndex(newIdx);
+                setSelectedImage(allImages[newIdx]);
+            }
+        } else if (info.offset.x > swipeThreshold) {
+            if (activeIndex > 0) {
+                const newIdx = activeIndex - 1;
+                setActiveIndex(newIdx);
+                setSelectedImage(allImages[newIdx]);
+            }
+        }
     };
 
     return (
         <div className="flex flex-col w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12 lg:gap-16 items-start">
-                
-                {/* Main Image View (Static, state-driven) */}
-                <div 
-                    className="relative w-full border-b border-slate-800/80 md:border-none md:rounded-3xl overflow-hidden aspect-square shadow-2xl bg-black flex items-center justify-center pointer-events-none select-none"
-                >
-                    {selectedImage ? (
-                        <img 
-                            src={selectedImage} 
-                            alt={name} 
-                            className="w-full h-full object-contain"
-                            draggable={false}
-                            loading="eager"
-                            style={{ 
-                                transform: 'translate3d(0,0,0)',
-                                willChange: 'transform',
-                                backfaceVisibility: 'hidden'
+            {/* [PC VERSION - WIDE SLIDE LAYOUT] */}
+            <div className="hidden sm:flex flex-col w-full gap-4 md:gap-6">
+                {/* Main Wide Slider Area */}
+                <div className="max-w-screen-xl mx-auto w-full px-6 overflow-hidden">
+                    <div className="relative group/main w-full h-[60vh] md:h-[65vh] lg:h-[70vh] max-h-[850px] aspect-[16/9] bg-black rounded-[2rem] overflow-hidden flex items-center justify-center shadow-[0_40px_100px_rgba(0,0,0,0.7)]">
+                        <AnimatePresence mode="wait">
+                            <motion.img
+                                key={activeIndex}
+                                src={allImages[activeIndex]}
+                                initial={{ opacity: 0, x: 100 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -100 }}
+                                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                                className="w-full h-full object-contain select-none"
+                                draggable={false}
+                            />
+                        </AnimatePresence>
+                        
+                        {/* Navigation Arrows (Visible on Hover) */}
+                        <button 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                const newIdx = activeIndex === 0 ? allImages.length - 1 : activeIndex - 1;
+                                setActiveIndex(newIdx);
+                                setSelectedImage(allImages[newIdx]);
                             }}
-                        />
-                    ) : (
-                        <div className="flex flex-col items-center text-slate-600">
-                            <ImageOff size={80} className="mb-4 opacity-50" />
-                            <span className="uppercase tracking-widest font-semibold opacity-50 text-center px-4">Image Ready</span>
-                        </div>
-                    )}
+                            className="absolute left-8 p-5 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-white opacity-0 group-hover/main:opacity-100 transition-all duration-300 hover:bg-cyan-500 hover:border-cyan-400 hover:scale-110 z-20"
+                        >
+                            <ChevronLeft size={32} />
+                        </button>
+                        <button 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                const newIdx = activeIndex === allImages.length - 1 ? 0 : activeIndex + 1;
+                                setActiveIndex(newIdx);
+                                setSelectedImage(allImages[newIdx]);
+                            }}
+                            className="absolute right-8 p-5 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-white opacity-0 group-hover/main:opacity-100 transition-all duration-300 hover:bg-cyan-500 hover:border-cyan-400 hover:scale-110 z-20"
+                        >
+                            <ChevronRight size={32} />
+                        </button>
+
+                        {/* Gradient Overlays */}
+                        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
+                        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+                    </div>
                 </div>
-                
-                {/* 우측 정보 영역 (children) */}
+
+                {/* PC Detailed Photo Slider (Integrated GalleryThumbnailSlider) */}
+                <div className="max-w-7xl mx-auto w-full py-4">
+                    <GalleryThumbnailSlider 
+                        images={allImages}
+                        name={name}
+                        activeIndex={activeIndex}
+                        onThumbnailClick={(img, idx) => {
+                            setActiveIndex(idx);
+                            setSelectedImage(img);
+                        }}
+                    />
+                </div>
+
+
+                {/* PC Info Section (Wide) */}
                 {children && (
-                    <div className="flex flex-col justify-center h-full pt-10 px-6 md:pt-0 md:px-0">
+                    <div className="w-full max-w-7xl mx-auto px-6 py-2 md:py-4">
+                        <div className="text-center mb-2 md:mb-4">
+                            <motion.h1 
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter"
+                            >
+                                {name}
+                            </motion.h1>
+                        </div>
                         {children}
                     </div>
                 )}
             </div>
 
-            {/* 하단 상세 사진 슬라이더 */}
-            {allImages.length > 0 && (
-                <div className="mt-16 border-t border-slate-800/50 pt-12">
-                    <div className="flex items-center justify-between mb-8 px-6">
-                        <h3 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-3">
-                            <span className="w-1.5 h-8 bg-cyan-400 rounded-full inline-block"></span>
-                            다양한 각도의 상세 사진
-                        </h3>
-                    </div>
+            {/* [MOBILE VERSION GALLERY] - Restored */}
+            <div className="block sm:hidden w-full">
+                <div className="relative w-full aspect-square bg-black overflow-hidden flex items-center justify-center touch-pan-y">
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={activeIndex}
+                            src={allImages[activeIndex]}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }}
+                            onDragEnd={onDragEnd}
+                            className="w-full h-full object-contain cursor-grab active:cursor-grabbing"
+                            onClick={() => {
+                                setSelectedModalImage(allImages[activeIndex]);
+                                setIsModalOpen(true);
+                            }}
+                        />
+                    </AnimatePresence>
                     
-                    <GalleryThumbnailSlider 
-                        images={allImages}
-                        name={name}
-                        activeIndex={activeIndex}
-                        onThumbnailClick={handleThumbnailAction}
-                    />
+                    <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-[10px] font-bold text-white tracking-widest z-20">
+                        {activeIndex + 1} / {allImages.length}
+                    </div>
                 </div>
-            )}
 
-            {/* 스마트 모달 (Modal View) */}
-            {isModalOpen && selectedModalImage && (
-                <div 
-                    className="fixed inset-0 w-full h-full z-[9998] flex items-center justify-center bg-black/60 backdrop-blur-sm p-2 md:p-8 animate-in fade-in duration-300"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) {
-                            setIsModalOpen(false);
-                        }
-                    }}
-                >
-                    <button 
-                        onClick={() => setIsModalOpen(false)}
-                        className="absolute top-4 right-4 md:top-8 md:right-8 text-white hover:text-cyan-400 transition-colors z-50 p-2 cursor-pointer bg-slate-800/50 hover:bg-slate-800 rounded-full shadow-lg"
-                    >
-                        <X size={28} />
-                    </button>
-                    <img 
-                        src={selectedModalImage} 
-                        alt={`${name} 상세 확대`} 
-                        className="max-w-full max-h-full lg:max-w-7xl lg:max-h-[95vh] object-contain filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-xl animate-in zoom-in-95 duration-300"
-                    />
+                {/* Mobile Thumbnail Slider (Free Mode) */}
+                <div className="mt-4 px-6 overflow-x-auto scrollbar-none flex gap-3 pb-6">
+                    {allImages.map((img, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => {
+                                setActiveIndex(idx);
+                                setSelectedImage(img);
+                            }}
+                            className={`relative w-20 h-20 shrink-0 aspect-square rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                                activeIndex === idx 
+                                    ? "border-cyan-400 scale-105 shadow-[0_0_15px_rgba(34,211,238,0.3)]" 
+                                    : "border-slate-800 opacity-60"
+                            }`}
+                        >
+                            <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                        </button>
+                    ))}
                 </div>
-            )}
+
+                {/* Mobile Info Area */}
+                {children && <div className="px-6 py-4">{children}</div>}
+            </div>
+
+
+            <AnimatePresence>
+                {isModalOpen && selectedModalImage && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 w-full h-full z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-2xl p-4"
+                        onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}
+                    >
+                        <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 md:top-8 md:right-8 text-white/70 hover:text-white z-50 p-3 md:p-4 bg-slate-800/60 hover:bg-slate-800/80 rounded-full transition-all border border-white/10 backdrop-blur-xl group">
+                            <X size={28} className="md:size-8 transition-transform group-hover:scale-110" />
+                        </button>
+                        <motion.img 
+                            initial={{ scale: 0.9, y: 30, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.9, y: 30, opacity: 0 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            src={selectedModalImage} 
+                            className="max-w-full max-h-[92vh] object-contain rounded-3xl shadow-[0_50px_120px_rgba(0,0,0,0.9)] border border-white/10"
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

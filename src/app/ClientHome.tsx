@@ -26,8 +26,8 @@ export default function ClientHome({ products, portfolios }: { products: any[], 
 
   return (
     <>
-      <main className="relative bg-slate-900 text-slate-300 font-sans selection:bg-cyan-500/30">
-        <section className="min-h-screen bg-slate-950 flex items-center justify-center pt-24 pb-12">
+      <main className="relative bg-slate-950 text-slate-300 font-sans selection:bg-cyan-500/30">
+        <section className="min-h-[70vh] flex items-center justify-center pt-24 md:pt-32 pb-6 md:pb-10">
 
           <div className="max-w-7xl w-full px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
@@ -40,7 +40,7 @@ export default function ClientHome({ products, portfolios }: { products: any[], 
                 </span>
               </h1>
 
-              <p className="text-gray-300 text-base md:text-lg mt-4 md:mt-6 max-w-xl font-light drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] break-keep leading-relaxed">
+              <p className="text-gray-300 text-lg md:text-xl mt-4 md:mt-6 max-w-xl font-light drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] break-keep leading-relaxed">
                 LG 4WAY 시스템 에어컨의 압도적인 공조 설계.<br className="hidden lg:block" />
                 바람이 닿지 않는 사각지대까지 완벽한 온도를 유지합니다.
               </p>
@@ -71,7 +71,7 @@ export default function ClientHome({ products, portfolios }: { products: any[], 
 
           </div>
         </section>
-        <section className="py-20 md:py-24 px-4 md:px-12 max-w-7xl mx-auto">
+        <section className="py-6 md:py-12 px-6 max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-5xl font-bold text-center mb-10 md:mb-16 text-white break-keep">
             우리의 <span className="text-cyan-400">대표 제품</span>
           </h2>
@@ -106,7 +106,7 @@ export default function ClientHome({ products, portfolios }: { products: any[], 
                   {/* Overlay for Product Name */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="absolute bottom-4 left-4 right-4 z-10 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-500">
-                    <p className="text-white font-bold text-xs md:text-sm lg:text-base leading-tight drop-shadow-md">
+                    <p className="text-white font-bold text-sm md:text-base lg:text-lg leading-tight drop-shadow-md">
                       {product.name}
                     </p>
                   </div>
@@ -127,14 +127,14 @@ export default function ClientHome({ products, portfolios }: { products: any[], 
             </Link>
           </div>
         </section>
-        {/* 3. PORTFOLIO & INFO (그리드 간격 대폭 축소) */}
-        <section className="py-20 md:py-24 px-4 md:px-12 max-w-7xl mx-auto border-t border-slate-800">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* 3. PORTFOLIO & INFO */}
+        <section className="py-6 md:py-12 px-6 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10 items-center">
             <div className="text-center lg:text-left">
               <h2 className="text-3xl md:text-5xl font-bold mb-6 break-keep text-white leading-tight">
                 20년의 노하우가<br />만드는 확실한 차이
               </h2>
-              <p className="text-slate-400 mb-8 leading-relaxed break-keep text-base md:text-lg">
+              <p className="text-slate-400 mb-8 leading-relaxed break-keep text-lg md:text-xl">
                 수많은 시공 실적이 증명하는 완벽한 디테일. DongAn HVAC은 현장의 특성을 정확히 파악하여 가장 효율적이고 안정적인 공조 시스템을 설계부터 유지보수까지 원스톱으로 제공합니다.
               </p>
               <Link href="/portfolio" className="text-cyan-400 font-bold flex items-center justify-center lg:justify-start gap-2 hover:text-cyan-300 transition-colors inline-flex cursor-pointer text-base md:text-lg">
@@ -176,27 +176,6 @@ export default function ClientHome({ products, portfolios }: { products: any[], 
         </section>
       </main >
 
-      {/* Footer */}
-      <footer className="bg-slate-950 py-12 md:py-16 px-6 border-t border-slate-900" >
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 justify-between items-center sm:items-start md:items-center">
-          <div className="text-center sm:text-left">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 md:mb-4 tracking-tight">DongAn <span className="text-cyan-400 font-light">HVAC</span></h2>
-            <p className="text-slate-400 leading-relaxed font-light break-keep text-sm md:text-base">
-              공간의 쾌적함을 넘어, 비즈니스의 성공을 돕는 최적의 공조 파트너입니다.
-            </p>
-          </div>
-          <div className="text-center sm:text-left md:text-right flex flex-col gap-2 text-slate-400 font-light text-sm md:text-[15px]">
-            <div className="flex flex-col sm:flex-row sm:gap-4 md:flex-col lg:flex-row">
-              <span>Email: contact@dongan-hvac.com</span>
-              <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-              <span>Tel: 02-123-4567</span>
-              <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-              <span>Fax: 02-123-4568</span>
-            </div>
-            <p className="pt-2 md:pt-4 border-t border-slate-800/50 mt-2">Copyright &copy; 2026 DongAn HVAC. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }

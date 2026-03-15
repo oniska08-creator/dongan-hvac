@@ -136,26 +136,23 @@ export default function ProductCategoryRow({ category, items }: ProductRowProps)
                                     /* Fallback 이미지 방어 로직 */
                                     <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-slate-800 text-slate-500 pointer-events-none">
                                         <ImageOff size={48} className="mb-3 opacity-50" />
-                                        <span className="text-sm font-semibold tracking-widest uppercase opacity-50 text-center px-4 leading-tight">DongAn HVAC</span>
+                                        <span className="text-base font-semibold tracking-widest uppercase opacity-50 text-center px-4 leading-tight">DongAn HVAC</span>
                                     </div>
                                 )}
                                 {/* Image Overlay Gradient */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none" />
                             </div>
 
-                            {/* Text & Specs */}
-                            <div className="p-6 flex flex-col flex-grow bg-slate-900 border-t border-slate-800/50 relative z-10 transition-colors duration-300 group-hover/card:bg-slate-800 pointer-events-none">
-                                <h3 className="text-lg md:text-xl font-extrabold text-white mb-3 line-clamp-2 tracking-tight group-hover/card:text-cyan-400 transition-colors">
+                            {/* Text Area - Minimalist */}
+                            <div className="px-6 py-6 flex flex-col items-center text-center bg-slate-900 border-t border-slate-800/50 relative z-10 transition-colors duration-300 group-hover/card:bg-slate-800 pointer-events-none">
+                                <h3 className="text-xl md:text-2xl font-black text-white line-clamp-2 tracking-tighter group-hover/card:text-cyan-400 transition-colors leading-tight min-h-[3.5rem] flex items-center justify-center">
                                     {product.name}
                                 </h3>
-                                <p className="text-slate-400 text-sm mb-6 line-clamp-3 font-light leading-relaxed flex-grow">
-                                    {product.features}
-                                </p>
 
-                                {/* Buttons - Enable pointer events on button so it's clickable */}
-                                <div className="mt-auto pointer-events-auto">
+                                {/* Button Placeholder/Indicator */}
+                                <div className="mt-4 w-full pointer-events-auto">
                                     <div
-                                        className="w-full inline-flex items-center justify-center px-4 py-3 bg-slate-950 text-slate-300 group-hover/card:text-cyan-400 border border-slate-700/50 group-hover/card:border-cyan-500/50 rounded-xl font-bold transition-all duration-300 text-sm shadow-md group-hover/card:shadow-[0_0_15px_rgba(8,145,178,0.2)]"
+                                        className="w-full inline-flex items-center justify-center px-4 py-3 bg-slate-950 text-sm text-slate-400 group-hover/card:text-cyan-400 border border-slate-800 group-hover/card:border-cyan-500/30 rounded-lg font-bold transition-all duration-300 shadow-sm"
                                     >
                                         상세보기
                                     </div>

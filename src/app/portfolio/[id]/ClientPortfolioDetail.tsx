@@ -1,7 +1,18 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ImageOff, X } from "lucide-react";
+import { 
+    ArrowLeft, 
+    ArrowRight, 
+    ImageOff, 
+    X, 
+    MapPin as MapPinIcon, 
+    Ruler as RulerIcon, 
+    Calendar as CalendarIcon, 
+    Tag as TagIcon, 
+    ChevronLeft, 
+    ChevronRight 
+} from "lucide-react";
 import GalleryThumbnailSlider from "@/components/GalleryThumbnailSlider";
 import { useState, useEffect } from "react";
 
@@ -25,222 +36,292 @@ export default function ClientPortfolioDetail({ project }: { project: any }) {
     }, []);
 
     const handleThumbnailAction = (img: string, idx: number) => {
-        // 1. Update hero image immediately
         setSelectedImage(img);
         setActiveIndex(idx);
         
-        // 2. Open modal with a tiny delay
-        setSelectedModalImage(img);
-        setTimeout(() => {
-            setIsModalOpen(true);
-        }, 10);
+        // Only open modal on mobile (sm breakpoint is 640px)
+        if (window.innerWidth < 640) {
+            setSelectedModalImage(img);
+            setTimeout(() => {
+                setIsModalOpen(true);
+            }, 10);
+        }
+    };
+
+    // Mobile Swipe Handler
+    const onDragEnd = (event: any, info: any) => {
+        const swipeThreshold = 50;
+        if (info.offset.x < -swipeThreshold) {
+            if (activeIndex < allImages.length - 1) {
+                const nextIdx = activeIndex + 1;
+                setActiveIndex(nextIdx);
+                setSelectedImage(allImages[nextIdx]);
+            }
+        } else if (info.offset.x > swipeThreshold) {
+            if (activeIndex > 0) {
+                const prevIdx = activeIndex - 1;
+                setActiveIndex(prevIdx);
+                setSelectedImage(allImages[prevIdx]);
+            }
+        }
     };
 
     return (
         <>
-            <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-cyan-500/30 pb-32 md:pb-0">
-                {/* 2. Hero Section (Static View) */}
-                <section 
-                    className="relative h-[50vh] md:h-[70vh] w-full flex items-center justify-center pt-16 pointer-events-none select-none"
-                >
-                    <div className="absolute inset-0 w-full h-full z-0 bg-black flex items-center justify-center">
-                        {selectedImage ? (
-                            <img 
-                                src={selectedImage} 
-                                alt={project.title} 
-                                className="w-full h-full object-contain"
-                                draggable={false}
-                                loading="eager"
-                                style={{ 
-                                    transform: 'translate3d(0,0,0)',
-                                    willChange: 'transform',
-                                    backfaceVisibility: 'hidden'
+            <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500/30">
+                
+                {/* [PC VERSION - WIDE SLIDE LAYOUT] */}
+                <section className="hidden sm:flex flex-col w-full pt-20 md:pt-24 gap-4 md:gap-6">
+                    <div className="max-w-7xl mx-auto w-full px-6 overflow-hidden">
+                        <div className="relative group/main w-full h-[60vh] md:h-[65vh] lg:h-[70vh] max-h-[850px] aspect-[16/9] bg-black rounded-[2rem] overflow-hidden flex items-center justify-center shadow-[0_40px_100px_rgba(0,0,0,0.7)]">
+                            <AnimatePresence mode="wait">
+                                <motion.img
+                                    key={activeIndex}
+                                    src={allImages[activeIndex]}
+                                    initial={{ opacity: 0, x: 100 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -100 }}
+                                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                                    className="w-full h-full object-contain select-none"
+                                    draggable={false}
+                                />
+                            </AnimatePresence>
+                            
+                            {/* PC Navigation Arrows */}
+                            <button 
+                                onClick={() => {
+                                    const newIdx = activeIndex === 0 ? allImages.length - 1 : activeIndex - 1;
+                                    handleThumbnailAction(allImages[newIdx], newIdx);
+                                }}
+                                className="absolute left-8 p-6 rounded-full bg-black/40 backdrop-blur-3xl border border-white/10 text-white opacity-0 group-hover/main:opacity-100 transition-all duration-300 hover:bg-cyan-500 hover:border-cyan-400 hover:scale-110 z-20"
+                            >
+                                <ChevronLeft size={36} />
+                            </button>
+                            <button 
+                                onClick={() => {
+                                    const newIdx = activeIndex === allImages.length - 1 ? 0 : activeIndex + 1;
+                                    handleThumbnailAction(allImages[newIdx], newIdx);
+                                }}
+                                className="absolute right-8 p-6 rounded-full bg-black/40 backdrop-blur-3xl border border-white/10 text-white opacity-0 group-hover/main:opacity-100 transition-all duration-300 hover:bg-cyan-500 hover:border-cyan-400 hover:scale-110 z-20"
+                            >
+                                <ChevronRight size={36} />
+                            </button>
+
+                            <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-transparent to-slate-950 z-10 pointer-events-none" />
+                            
+                        </div>
+                    </div>
+
+                    {/* [PC ONLY] Secondary Thumbnail Slider (Horizontal Wide) */}
+                    <div className="max-w-7xl mx-auto w-full py-4">
+                        <GalleryThumbnailSlider 
+                            images={allImages}
+                            activeIndex={activeIndex}
+                            name={project.title}
+                            onThumbnailClick={handleThumbnailAction}
+                        />
+                    </div>
+
+                </section>
+
+                {/* [MOBILE VERSION GALLERY] */}
+                <section className="block sm:hidden w-full pt-20 bg-black relative">
+                    <div className="relative w-full aspect-square overflow-hidden flex items-center justify-center touch-pan-y">
+                        <AnimatePresence mode="wait">
+                            <motion.img
+                                key={activeIndex}
+                                src={allImages[activeIndex]}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.3, ease: "easeOut" }}
+                                drag="x"
+                                dragConstraints={{ left: 0, right: 0 }}
+                                onDragEnd={onDragEnd}
+                                className="w-full h-full object-contain cursor-grab active:cursor-grabbing"
+                                onClick={() => {
+                                    setSelectedModalImage(allImages[activeIndex]);
+                                    setIsModalOpen(true);
                                 }}
                             />
-                        ) : (
-                            <div className="flex flex-col items-center text-slate-700">
-                                <ImageOff size={80} className="mb-4 opacity-50" />
-                            </div>
-                        )}
+                        </AnimatePresence>
+                        
+                        <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-[10px] font-bold text-white tracking-widest z-20">
+                            {activeIndex + 1} / {allImages.length}
+                        </div>
                     </div>
-                    {/* Darker overlay for better text readability */}
-                    <div className="absolute inset-0 bg-slate-950/50 z-10 pointer-events-none" />
 
-                    <div className="relative z-20 text-center px-6 max-w-5xl">
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8 }}
-                            className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight break-keep leading-tight"
-                        >
-                            {project.title}
-                        </motion.h1>
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="text-lg md:text-xl text-slate-300 font-light"
-                        >
-                            DongAn HVAC 엔지니어링의 완벽한 기술 적용 사례
-                        </motion.p>
+                    <div className="mt-4 px-6 overflow-x-auto scrollbar-none flex gap-3 pb-6">
+                        {allImages.map((img, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => {
+                                    setActiveIndex(idx);
+                                    setSelectedImage(img);
+                                }}
+                                className={`relative w-24 h-24 shrink-0 aspect-square rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                                    activeIndex === idx 
+                                        ? "border-cyan-400 scale-105 shadow-[0_0_15px_rgba(34,211,238,0.2)]" 
+                                        : "border-slate-800 opacity-60"
+                                }`}
+                            >
+                                <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="px-6 py-6 bg-slate-950">
+                        <div className="flex gap-2">
+                            <span className="text-xs font-bold text-cyan-400 bg-cyan-400/10 px-2.5 py-1 rounded-md border border-cyan-400/20">{project.date}</span>
+                            <span className="text-xs font-bold text-slate-400 bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 uppercase tracking-wider">Solution</span>
+                        </div>
                     </div>
                 </section>
 
-                {/* 3. Project Specs (Glassmorphism Box overlapping Hero) */}
-                <section className="relative max-w-7xl mx-auto px-6 z-30 -mt-16 md:-mt-20">
-                    <motion.div
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        className="bg-slate-800/80 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] border border-slate-700 w-full"
-                    >
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-slate-700/50">
-                            <div className="px-4 text-center pt-4 md:pt-0">
-                                <p className="text-slate-500 font-bold text-sm tracking-widest uppercase mb-2">고객사</p>
-                                <p className="text-white font-extrabold text-lg md:text-xl">{project.clientName || "DongAn 고객사"}</p>
-                            </div>
-                            <div className="px-4 text-center pt-8 md:pt-0">
-                                <p className="text-slate-500 font-bold text-sm tracking-widest uppercase mb-2">시공일자</p>
-                                <p className="text-white font-extrabold text-lg md:text-xl">{project.date}</p>
-                            </div>
-                            <div className="px-4 text-center pt-8 md:pt-0">
-                                <p className="text-slate-500 font-bold text-sm tracking-widest uppercase mb-2">시공면적</p>
-                                <p className="text-cyan-400 font-extrabold text-lg md:text-xl">{project.area || "협의"}</p>
-                            </div>
-                            <div className="px-4 text-center pt-8 md:pt-0">
-                                <p className="text-slate-500 font-bold text-sm tracking-widest uppercase mb-2">적용솔루션</p>
-                                <p className="text-white font-extrabold text-lg md:text-xl break-keep">{project.solution}</p>
-                            </div>
-                        </div>
-                    </motion.div>
-                    
-                    {/* Thumbnail Slider Integration */}
-                    {allImages.length > 0 && (
-                        <div className="mt-12">
-                             <div className="mb-6 px-4">
-                                <h3 className="text-xl font-bold text-white tracking-tight flex items-center gap-3">
-                                    <span className="w-1.5 h-6 bg-cyan-400 rounded-full inline-block"></span>
-                                    현장 상세 사진
-                                </h3>
-                            </div>
-                            <GalleryThumbnailSlider 
-                                images={allImages}
-                                activeIndex={activeIndex}
-                                name={project.title}
-                                onThumbnailClick={handleThumbnailAction}
-                            />
-                        </div>
-                    )}
-                </section>
-
-                {/* 4. Content Body */}
-                <main className="py-24 px-6 max-w-5xl mx-auto space-y-24">
-                    {/* Description */}
-                    <div className="space-y-16">
+                {/* [PROJECT SUMMARY CARDS] */}
+                <section className="relative max-w-7xl mx-auto px-6 z-30 mb-3 md:mb-6 text-slate-100">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+                        {/* 프로젝트명 */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="space-y-6"
+                            className="bg-slate-800/40 backdrop-blur-xl p-4 md:p-8 rounded-2xl md:rounded-[2rem] border border-slate-700/50 flex flex-col md:flex-row items-center justify-center md:justify-start gap-3 md:gap-6 transition-all hover:bg-slate-800/60 group shadow-lg"
                         >
-                            <h3 className="text-3xl font-extrabold text-white flex items-center">
-                                <span className="w-8 h-1 bg-cyan-500 mr-4 rounded-full"></span>
-                                시공 상세 내역
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-pink-500/10 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 border border-pink-500/10 text-pink-400 group-hover:scale-110 transition-transform duration-300">
+                                <TagIcon size={22} className="md:size-7" />
+                            </div>
+                            <div className="text-center md:text-left overflow-hidden">
+                                <p className="text-slate-500 text-[9px] md:text-xs font-bold tracking-widest uppercase mb-1">프로젝트명</p>
+                                <p className="text-white text-[11px] md:text-xl font-black break-keep truncate">{project.title}</p>
+                            </div>
+                        </motion.div>
+                        {/* 고객사 */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="bg-slate-800/40 backdrop-blur-xl p-4 md:p-8 rounded-2xl md:rounded-[2rem] border border-slate-700/50 flex flex-col md:flex-row items-center justify-center md:justify-start gap-3 md:gap-6 transition-all hover:bg-slate-800/60 group shadow-lg"
+                        >
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-cyan-500/10 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 border border-cyan-500/10 text-cyan-400 group-hover:scale-110 transition-transform duration-300">
+                                <MapPinIcon size={22} className="md:size-7" />
+                            </div>
+                            <div className="text-center md:text-left overflow-hidden">
+                                <p className="text-slate-500 text-[9px] md:text-xs font-bold tracking-widest uppercase mb-1">고객사</p>
+                                <p className="text-white text-[11px] md:text-xl font-black break-keep truncate">{project.clientName || "-"}</p>
+                            </div>
+                        </motion.div>
+
+                        {/* 시공일자 */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.1 }}
+                            className="bg-slate-800/40 backdrop-blur-xl p-4 md:p-8 rounded-2xl md:rounded-[2rem] flex flex-col md:flex-row items-center justify-center md:justify-start gap-3 md:gap-6 transition-all hover:bg-slate-800/60 group shadow-lg"
+                        >
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-blue-500/10 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 border border-blue-500/10 text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                                <CalendarIcon size={22} className="md:size-7" />
+                            </div>
+                            <div className="text-center md:text-left overflow-hidden">
+                                <p className="text-slate-500 text-[9px] md:text-xs font-bold tracking-widest uppercase mb-1">시공일자</p>
+                                <p className="text-white text-[11px] md:text-xl font-black break-keep truncate">{project.date || "-"}</p>
+                            </div>
+                        </motion.div>
+
+                        {/* 시공면적 */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.2 }}
+                            className="bg-slate-800/40 backdrop-blur-xl p-4 md:p-8 rounded-2xl md:rounded-[2rem] flex flex-col md:flex-row items-center justify-center md:justify-start gap-3 md:gap-6 transition-all hover:bg-slate-800/60 group shadow-lg"
+                        >
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-indigo-500/10 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 border border-indigo-500/10 text-indigo-400 group-hover:scale-110 transition-transform duration-300">
+                                <RulerIcon size={22} className="md:size-7" />
+                            </div>
+                            <div className="text-center md:text-left overflow-hidden">
+                                <p className="text-slate-500 text-[9px] md:text-xs font-bold tracking-widest uppercase mb-1">시공면적</p>
+                                <p className="text-white text-[11px] md:text-xl font-black break-keep truncate">{project.area || "-"}</p>
+                            </div>
+                        </motion.div>
+                    </div>
+                    
+                </section>
+
+                {/* [CONTENT BODY] */}
+                <main className="py-3 md:py-6 px-6 max-w-7xl mx-auto">
+                    <div className="max-w-4xl mx-auto space-y-2 md:space-y-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            className="space-y-4"
+                        >
+                            <h3 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4 text-center md:text-left">
+                                상세내용
                             </h3>
-                            <div className="bg-slate-800/30 rounded-3xl p-8 md:p-12 border border-slate-700/50">
-                                <p className="text-slate-300 text-lg md:text-xl leading-loose font-light break-keep whitespace-pre-wrap">
+                            <div className="bg-slate-800/20 backdrop-blur-sm rounded-[3rem] p-10 md:p-18 shadow-2xl relative overflow-hidden group">
+                                <p className="relative z-10 text-slate-300 text-lg md:text-2xl leading-[2.2] md:leading-[2.6] font-light break-keep whitespace-pre-wrap tracking-wide drop-shadow-sm">
                                     {project.solution}
-                                    <br /><br />
-                                    동안 공조의 책임 시공으로 완벽하게 마무리된 현장입니다. 고객 만족을 최우선으로 생각하는 저희의 기술력을 직접 확인해 보세요.
                                 </p>
                             </div>
                         </motion.div>
                     </div>
-
-                    {/* Action Buttons */}
-                    <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-center items-center gap-4 mb-20">
-                        <Link
-                            href="/portfolio"
-                            className="w-full sm:w-auto rounded-full px-6 py-4 bg-white border border-slate-300 text-slate-900 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 group cursor-pointer font-medium text-base shadow-sm"
-                        >
-                            <ArrowLeft size={20} className="transition-transform group-hover:-translate-x-1" /> 목록으로 돌아가기
-                        </Link>
-                        <Link
-                            href={`/contact?subject=${encodeURIComponent(project.title + ' 시공 사례 관련 문의드립니다.')}`}
-                            className="w-full sm:w-auto px-6 py-4 rounded-full bg-[#00A9CE] text-white font-medium text-base hover:bg-[#008BB0] hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(0,169,206,0.4)] flex items-center justify-center gap-3 cursor-pointer"
-                        >
-                            견적 상담하기 <ArrowRight size={22} />
-                        </Link>
-                    </div>
                 </main>
 
-                {/* Footer */}
-                <footer className="bg-slate-950 py-12 md:py-16 px-6 border-t border-slate-900 mt-10">
-                    <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 justify-between items-center sm:items-start md:items-center">
-                        <div className="text-center sm:text-left">
-                            <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 md:mb-4 tracking-tight">DongAn <span className="text-cyan-400 font-light">HVAC</span></h2>
-                            <p className="text-slate-400 leading-relaxed font-light break-keep text-sm md:text-base">
-                                공간의 쾌적함을 넘어, 비즈니스의 성공을 돕는 최적의 공조 파트너입니다.
-                            </p>
-                        </div>
-                        <div className="text-center sm:text-left md:text-right flex flex-col gap-2 text-slate-400 font-light text-sm md:text-[15px]">
-                            <div className="flex flex-col sm:flex-row sm:gap-4 md:flex-col lg:flex-row">
-                                <span>Email: contact@dongan-hvac.com</span>
-                                <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-                                <span>Tel: 02-123-4567</span>
-                                <span className="hidden sm:inline md:hidden lg:inline">&nbsp;|&nbsp;</span>
-                                <span>Fax: 02-123-4568</span>
-                            </div>
-                            <p className="pt-2 md:pt-4 border-t border-slate-800/50 mt-2">Copyright &copy; 2026 DongAn HVAC. All rights reserved.</p>
-                        </div>
-                    </div>
-                </footer>
+                {/* [PC ONLY] Final Action Buttons - Catalogue Closing Style */}
+                <div className="hidden sm:flex items-center justify-center gap-6 mt-4 md:mt-6 pt-4 md:pt-6 pb-8 md:pb-12 max-w-7xl mx-auto">
+                    <Link 
+                        href="/portfolio"
+                        className="px-10 py-5 rounded-2xl border border-slate-700 bg-slate-900/50 text-slate-300 hover:bg-slate-800 hover:text-white transition-all font-bold flex items-center gap-3 group text-lg shadow-lg"
+                    >
+                        <ArrowLeft size={22} className="transition-transform group-hover:-translate-x-1" />
+                        목록으로 돌아가기
+                    </Link>
+                    <Link 
+                        href={`/contact?subject=${encodeURIComponent(project.title)}`}
+                        className="px-14 py-5 rounded-2xl bg-cyan-500 text-white font-black text-xl hover:bg-cyan-400 transition-all shadow-[0_15px_35px_rgba(8,145,178,0.3)] active:scale-95"
+                    >
+                        견적 상담하기
+                    </Link>
+                </div>
+
             </div>
 
-            {/* Mobile Sticky Action Bar */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/90 backdrop-blur-xl border-t border-slate-800/60 z-[60] flex items-center justify-between gap-4 md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
-                <Link
-                    href="/portfolio"
-                    className="p-4 rounded-full border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors flex items-center justify-center shrink-0"
-                    aria-label="목록으로"
-                >
-                    <ArrowLeft size={22} />
-                </Link>
-                <Link
-                    href={`/contact?subject=${encodeURIComponent(project.title + ' 시공 사례 관련 문의드립니다.')}`}
-                    className="flex-1 py-4 rounded-full bg-[#00A9CE] text-white font-medium text-base hover:bg-[#008BB0] transition-all shadow-[0_0_20px_rgba(0,169,206,0.3)] flex items-center justify-center gap-2"
-                >
-                    견적 상담하기 <ArrowRight size={20} />
-                </Link>
+            {/* [Unified Fixed Bottom Bar] - Mobile Only (md:hidden) */}
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/95 backdrop-blur-3xl border-t border-slate-800/60 z-[60] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] md:hidden">
+                <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+                    <Link href="/portfolio" className="p-4 md:px-8 md:py-5 rounded-2xl border border-slate-700 bg-slate-800/50 text-slate-300 items-center justify-center shrink-0 hover:bg-slate-700 hover:text-white transition-all flex group font-bold">
+                        <ArrowLeft size={24} className="md:mr-2 transition-transform group-hover:-translate-x-1" />
+                        <span className="hidden md:inline">목록으로 돌아가기</span>
+                    </Link>
+                    <Link href={`/contact?subject=${encodeURIComponent(project.title)}`} className="flex-1 md:flex-none md:px-12 py-4 md:py-5 rounded-2xl bg-cyan-500 text-white font-black text-lg flex items-center justify-center gap-3 shadow-[0_12px_30px_rgba(8,145,178,0.4)] hover:bg-cyan-400 transition-all active:scale-[0.98]">
+                        견적 상담하기 <ArrowRight size={22} />
+                    </Link>
+                </div>
             </div>
 
-            {/* 스마트 모달 (Modal View) */}
+            {/* Premium Expand Modal */}
             <AnimatePresence>
                 {isModalOpen && selectedModalImage && (
                     <motion.div 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 w-full h-full z-[9998] flex items-center justify-center bg-black/60 backdrop-blur-sm p-2 md:p-8"
-                        onClick={(e) => {
-                            if (e.target === e.currentTarget) {
-                                setIsModalOpen(false);
-                            }
-                        }}
+                        className="fixed inset-0 w-full h-full z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-2xl p-4"
+                        onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}
                     >
-                        <button 
-                            onClick={() => setIsModalOpen(false)}
-                            className="absolute top-4 right-4 md:top-8 md:right-8 text-white hover:text-cyan-400 transition-colors z-50 p-2 cursor-pointer bg-slate-800/50 hover:bg-slate-800 rounded-full shadow-lg"
-                        >
-                            <X size={28} />
+                        <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 md:top-8 md:right-8 text-white/70 hover:text-white z-50 p-3 md:p-4 bg-slate-800/60 hover:bg-slate-800/80 rounded-full transition-all border border-white/10 backdrop-blur-xl group">
+                            <X size={28} className="md:size-8 transition-transform group-hover:scale-110" />
                         </button>
                         <motion.img 
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
+                            initial={{ scale: 0.9, y: 30, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.9, y: 30, opacity: 0 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
                             src={selectedModalImage} 
-                            alt={`${project.title} 상세 확대`} 
-                            className="max-w-full max-h-full lg:max-w-7xl lg:max-h-[95vh] object-contain filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-xl"
+                            className="max-w-full max-h-[92vh] object-contain rounded-3xl shadow-[0_50px_120px_rgba(0,0,0,0.9)] border border-white/10"
                         />
                     </motion.div>
                 )}
