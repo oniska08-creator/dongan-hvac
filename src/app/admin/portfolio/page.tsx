@@ -207,7 +207,7 @@ export default function AdminPortfolioPage() {
                 <div className="overflow-hidden md:overflow-x-auto p-6 md:p-0">
                     <table className="w-full text-left border-collapse block md:table">
                         <thead className="hidden md:table-header-group bg-slate-900 border-b border-slate-800">
-                            <tr className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] block md:table-row">
+                            <tr className="text-slate-400 text-sm md:text-[15px] font-black uppercase tracking-[0.2em] block md:table-row">
                                 <th className="py-5 px-6 w-16 text-center whitespace-nowrap block md:table-cell">ID</th>
                                 <th className="py-5 px-6 w-32 text-center whitespace-nowrap block md:table-cell">썸네일</th>
                                 <th className="py-5 px-6 w-full min-w-[300px] text-center whitespace-nowrap block md:table-cell">프로젝트명</th>
@@ -223,9 +223,9 @@ export default function AdminPortfolioPage() {
                                 const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
                                 return currentItems.map((item) => (
                                     <tr key={item.id} className="block md:table-row hover:bg-slate-50/80 transition-all bg-transparent mb-4 md:mb-0 border border-slate-100 md:border-none rounded-2xl md:rounded-none p-4 md:p-0">
-                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 md:text-center font-medium text-slate-400 whitespace-nowrap border-b border-slate-100 md:border-none tabular-nums text-sm">
-                                            <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">ID</span>
-                                            <span className="text-slate-900 md:text-slate-400 font-medium">{item.id}</span>
+                                        <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 md:text-center font-bold text-slate-400 whitespace-nowrap border-b border-slate-100 md:border-none tabular-nums text-sm md:text-base">
+                                            <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">ID</span>
+                                            <span className="text-slate-900 md:text-slate-400 font-black">{item.id}</span>
                                         </td>
                                         <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
                                             <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">썸네일</span>
@@ -242,16 +242,16 @@ export default function AdminPortfolioPage() {
                                             )}
                                         </td>
                                         <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
-                                            <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">프로젝트명</span>
-                                            <span className="text-sm md:text-base font-bold text-slate-900 truncate max-w-[200px] md:max-w-none">{item.title}</span>
+                                            <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">프로젝트명</span>
+                                            <span className="text-sm md:text-base font-black text-slate-900 truncate max-w-[200px] md:max-w-none">{item.title}</span>
                                         </td>
                                         <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
-                                            <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">고객사</span>
-                                            <span className="text-sm font-light text-slate-600">{item.clientName || "-"}</span>
+                                            <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">고객사</span>
+                                            <span className="text-sm md:text-base font-bold text-slate-600">{item.clientName || "-"}</span>
                                         </td>
                                         <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none tabular-nums">
-                                            <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">시공일자</span>
-                                            <span className="text-sm font-medium text-slate-400">{item.date}</span>
+                                            <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">시공일자</span>
+                                            <span className="text-sm md:text-base font-bold text-slate-400">{item.date}</span>
                                         </td>
                                         <td className="flex justify-center md:table-cell py-4 md:py-4 px-2 md:px-6 whitespace-nowrap mt-2 md:mt-0">
                                             <div className="flex items-center justify-center gap-6 md:gap-3 text-sm font-bold w-full md:w-auto">
@@ -283,7 +283,7 @@ export default function AdminPortfolioPage() {
 
                 {/* Pagination */}
                 <div className="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-sm text-slate-500 bg-slate-50 rounded-b-2xl gap-4">
-                    <span>전체 <strong>{items.length}</strong> 건의 시공사례가 있습니다.</span>
+                    <span>전체 <strong>{items.length}</strong> 건의 데이터 중 한 페이지에 10건씩 표시됩니다.</span>
                     {items.length > itemsPerPage && (
                         <div className="flex justify-center items-center gap-2">
                             <button
@@ -379,11 +379,10 @@ export default function AdminPortfolioPage() {
                                     <div>
                                         <label className="block text-sm font-bold text-slate-700 mb-1.5 ml-1">완공일자</label>
                                         <input
-                                            type="text"
+                                            type="date"
                                             value={formData.date}
                                             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/5 transition-all placeholder:text-slate-400"
-                                            placeholder="예: 2024.03"
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/5 transition-all"
                                         />
                                     </div>
                                 </div>

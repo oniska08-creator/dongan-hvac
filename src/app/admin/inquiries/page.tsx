@@ -79,7 +79,7 @@ export default function AdminInquiriesPage() {
                 <div className="overflow-hidden md:overflow-x-auto p-6 md:p-0">
                     <table className="w-full text-left border-collapse block md:table">
                         <thead className="hidden md:table-header-group bg-slate-900 border-b border-slate-800">
-                            <tr className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] block md:table-row">
+                            <tr className="text-slate-400 text-sm md:text-[15px] font-black uppercase tracking-[0.2em] block md:table-row">
                                 <th className="py-5 px-6 text-center whitespace-nowrap block md:table-cell">접수일자</th>
                                 <th className="py-5 px-6 text-center whitespace-nowrap block md:table-cell">고객명</th>
                                 <th className="py-5 px-6 text-center whitespace-nowrap block md:table-cell">연락처</th>
@@ -95,20 +95,20 @@ export default function AdminInquiriesPage() {
                                 const currentItems = inquiries.slice(indexOfFirstItem, indexOfLastItem);
                                 return currentItems.map((item) => (
                                     <tr key={item.id} className="block md:table-row hover:bg-slate-50/80 transition-all bg-transparent mb-4 md:mb-0 border border-slate-100 md:border-none rounded-2xl md:rounded-none p-4 md:p-0">
-                                        <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 font-medium text-slate-400 whitespace-nowrap border-b border-slate-100 md:border-none text-sm tabular-nums">
-                                            <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">접수일자</span>
-                                            <span className="text-slate-900 md:text-slate-400 font-medium">{item.date}</span>
+                                        <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 font-bold text-slate-400 whitespace-nowrap border-b border-slate-100 md:border-none text-sm md:text-base tabular-nums">
+                                            <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">접수일자</span>
+                                            <span className="text-slate-900 md:text-slate-400 font-bold">{item.date}</span>
                                         </td>
-                                        <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 font-bold text-slate-900 whitespace-nowrap border-b border-slate-100 md:border-none text-[15px] md:text-base">
-                                            <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">고객명</span>
+                                        <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 font-black text-slate-900 whitespace-nowrap border-b border-slate-100 md:border-none text-[15px] md:text-base">
+                                            <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">고객명</span>
                                             {item.name}
                                         </td>
-                                        <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none text-slate-600 text-sm">
-                                            <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">연락처</span>
+                                        <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none text-slate-600 text-sm md:text-base font-bold">
+                                            <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">연락처</span>
                                             {item.phone}
                                         </td>
-                                        <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none text-slate-600 text-sm">
-                                            <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">현장 평수</span>
+                                        <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none text-slate-600 text-sm md:text-base font-bold">
+                                            <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">현장 평수</span>
                                             {item.area}
                                         </td>
                                         <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">

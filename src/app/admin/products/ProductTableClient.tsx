@@ -23,7 +23,7 @@ export default function ProductTableClient() {
 
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 20;
+    const itemsPerPage = 10;
 
     const fetchProducts = async () => {
         mutate();
@@ -245,7 +245,7 @@ export default function ProductTableClient() {
                 <div className="overflow-hidden md:overflow-x-auto p-6 md:p-0">
                     <table className="w-full text-left border-collapse block md:table">
                             <thead className="hidden md:table-header-group bg-slate-900 border-b border-slate-800">
-                                <tr className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] block md:table-row">
+                                <tr className="text-slate-400 text-sm md:text-[15px] font-black uppercase tracking-[0.2em] block md:table-row">
                                     <th className="py-5 px-6 w-16 text-center whitespace-nowrap block md:table-cell">ID</th>
                                     <th className="py-5 px-6 w-32 text-center whitespace-nowrap block md:table-cell">썸네일</th>
                                     <th className="py-5 px-6 w-32 text-center whitespace-nowrap block md:table-cell">카테고리</th>
@@ -261,9 +261,9 @@ export default function ProductTableClient() {
                                     const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
                                     return currentItems.map((item: any) => (
                                         <tr key={item.id} className="block md:table-row hover:bg-slate-50/80 transition-all group bg-transparent mb-4 md:mb-0 border border-slate-100 md:border-none rounded-2xl md:rounded-none p-4 md:p-0">
-                                            <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 md:text-center font-medium text-slate-400 whitespace-nowrap border-b border-slate-100 md:border-none tabular-nums text-sm">
-                                                <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">제품 ID</span>
-                                                <span className="md:font-medium text-slate-900 md:text-slate-400">{item.id}</span>
+                                            <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 md:text-center font-bold text-slate-400 whitespace-nowrap border-b border-slate-100 md:border-none tabular-nums text-sm md:text-base">
+                                                <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">제품 ID</span>
+                                                <span className="md:font-black text-slate-900 md:text-slate-400 font-bold">{item.id}</span>
                                             </td>
                                             <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
                                                 <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">썸네일</span>
@@ -281,11 +281,11 @@ export default function ProductTableClient() {
                                             </td>
                                             <td className="flex justify-between items-center md:table-cell md:text-center py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
                                                 <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">분류</span>
-                                                <span className="text-sm text-cyan-600 font-bold">{item.category}</span>
+                                                <span className="text-sm md:text-base text-cyan-600 font-bold">{item.category}</span>
                                             </td>
                                             <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 whitespace-nowrap border-b border-slate-100 md:border-none">
-                                                <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">상품명</span>
-                                                <span className="text-sm md:text-base font-bold text-slate-900 truncate max-w-[200px] md:max-w-none">{item.name}</span>
+                                                <span className="md:hidden font-black text-slate-500 text-[13px] uppercase tracking-tighter">상품명</span>
+                                                <span className="text-sm md:text-base font-black text-slate-900 truncate max-w-[200px] md:max-w-none">{item.name}</span>
                                             </td>
                                             <td className="flex justify-between items-center md:table-cell py-3 md:py-4 px-2 md:px-6 md:text-center whitespace-nowrap border-b border-slate-100 md:border-none">
                                                 <span className="md:hidden font-bold text-slate-500 text-[13px] uppercase tracking-tighter">전시</span>
@@ -326,7 +326,7 @@ export default function ProductTableClient() {
 
                     {/* Pagination */}
                     <div className="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-sm text-slate-500 bg-slate-50 rounded-b-2xl gap-4">
-                        <span>전체 <strong>{items.length}</strong> 건의 데이터 중 최대 20건이 표기됩니다.</span>
+                        <span>전체 <strong>{items.length}</strong> 건의 데이터 중 한 페이지에 10건씩 표시됩니다.</span>
                         {items.length > itemsPerPage && (
                             <div className="flex justify-center items-center gap-2">
                                 <button

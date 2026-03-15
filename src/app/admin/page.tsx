@@ -68,52 +68,52 @@ export default async function AdminDashboard() {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                <div className="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-500 group">
-                    <div className="flex items-center justify-between mb-5">
+                <div className="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-500 group flex flex-col items-center text-center">
+                    <div className="flex items-center justify-center mb-5">
                         <div className="w-14 h-14 bg-slate-50 text-slate-900 rounded-2xl flex items-center justify-center border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-colors duration-500">
                             <Package size={26} />
                         </div>
                     </div>
-                    <div className="text-slate-400 text-[11px] font-black tracking-[0.15em] uppercase mb-1.5">총 상품군</div>
+                    <div className="text-slate-400 text-sm font-black tracking-[0.15em] uppercase mb-1.5">총 상품군</div>
                     <div className="text-4xl font-black text-slate-950 tabular-nums leading-none tracking-tighter">
-                        {productCount}<span className="text-xs font-black text-slate-300 ml-2 uppercase tracking-widest">개</span>
+                        {productCount}<span className="text-sm font-black text-slate-300 ml-2 uppercase tracking-widest">개</span>
                     </div>
                 </div>
 
-                <div className="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-500 group">
-                    <div className="flex items-center justify-between mb-5">
+                <div className="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-500 group flex flex-col items-center text-center">
+                    <div className="flex items-center justify-center mb-5">
                         <div className="w-14 h-14 bg-slate-50 text-slate-900 rounded-2xl flex items-center justify-center border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-colors duration-500">
                             <FolderKanban size={26} />
                         </div>
                     </div>
-                    <div className="text-slate-400 text-[11px] font-black tracking-[0.15em] uppercase mb-1.5">시공 실적</div>
+                    <div className="text-slate-400 text-sm font-black tracking-[0.15em] uppercase mb-1.5">시공 실적</div>
                     <div className="text-4xl font-black text-slate-950 tabular-nums leading-none tracking-tighter">
-                        {portfolioCount}<span className="text-xs font-black text-slate-300 ml-2 uppercase tracking-widest">건</span>
+                        {portfolioCount}<span className="text-sm font-black text-slate-300 ml-2 uppercase tracking-widest">건</span>
                     </div>
                 </div>
 
-                <div className="bg-white p-7 rounded-[2rem] border border-cyan-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative overflow-hidden group hover:shadow-[0_20px_40px_rgb(6,182,212,0.08)] hover:-translate-y-1 transition-all duration-500">
+                <div className="bg-white p-7 rounded-[2rem] border border-cyan-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative overflow-hidden group hover:shadow-[0_20px_40px_rgb(6,182,212,0.08)] hover:-translate-y-1 transition-all duration-500 flex flex-col items-center text-center">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-cyan-500/10 transition-all"></div>
-                    <div className="flex items-center justify-between mb-5 relative z-10">
+                    <div className="flex items-center justify-center mb-5 relative z-10">
                         <div className="w-14 h-14 bg-cyan-50 text-cyan-600 rounded-2xl flex items-center justify-center border border-cyan-100 group-hover:bg-cyan-600 group-hover:text-white transition-colors duration-500">
                             <MessageSquare size={26} />
                         </div>
                     </div>
-                    <div className="text-cyan-600/60 text-[11px] font-black tracking-[0.15em] uppercase mb-1.5 relative z-10">신규 인콰이어리</div>
+                    <div className="text-cyan-600/60 text-sm font-black tracking-[0.15em] uppercase mb-1.5 relative z-10">문의 내역</div>
                     <div className="text-4xl font-black text-cyan-600 relative z-10 tabular-nums leading-none tracking-tighter">
-                        {inquiryCount}<span className="text-xs font-black text-cyan-200 ml-2 uppercase tracking-widest">신규</span>
+                        {inquiryCount}<span className="text-sm font-black text-cyan-200 ml-2 uppercase tracking-widest">신규</span>
                     </div>
                 </div>
 
-                <div className="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-500 group">
-                    <div className="flex items-center justify-between mb-5">
+                <div className="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-500 group flex flex-col items-center text-center">
+                    <div className="flex items-center justify-center mb-5">
                         <div className="w-14 h-14 bg-slate-50 text-slate-900 rounded-2xl flex items-center justify-center border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-colors duration-500">
                             <Users size={26} />
                         </div>
                     </div>
-                    <div className="text-slate-400 text-[11px] font-black tracking-[0.15em] uppercase mb-1.5">금일 트래픽</div>
+                    <div className="text-slate-400 text-sm font-black tracking-[0.15em] uppercase mb-1.5">방문자</div>
                     <div className="text-4xl font-black text-slate-950 tabular-nums leading-none tracking-tighter">
-                        {todayVisitors}<span className="text-xs font-black text-slate-300 ml-2 uppercase tracking-widest">실시간</span>
+                        {todayVisitors}<span className="text-sm font-black text-slate-300 ml-2 uppercase tracking-widest">실시간</span>
                     </div>
                 </div>
             </div>
@@ -124,8 +124,8 @@ export default async function AdminDashboard() {
                 <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_50px_rgb(0,0,0,0.03)] overflow-hidden">
                     <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-transparent">
                         <div>
-                            <h2 className="text-xl font-black text-slate-900 tracking-tight">최근 견적 문의</h2>
-                            <p className="text-[11px] text-slate-400 font-black uppercase tracking-[0.2em] mt-1">최근 견적 접수 현황</p>
+                            <h2 className="text-2xl font-black text-slate-900 tracking-tight">최근 견적 문의</h2>
+                            <p className="text-sm text-slate-400 font-bold uppercase tracking-[0.2em] mt-1">최근 견적 접수 현황</p>
                         </div>
                         <Link href="/admin/inquiries" className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-cyan-600 hover:bg-cyan-50 transition-all group">
                             <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
@@ -137,17 +137,17 @@ export default async function AdminDashboard() {
                                 <div className="flex items-center gap-5">
                                     <div className="w-2 h-2 rounded-full bg-cyan-500 group-hover:scale-150 transition-all glow-cyan"></div>
                                     <div>
-                                        <div className="font-bold text-slate-900 text-[17px]">{inquiry.customerName} 고객</div>
-                                        <div className="text-sm text-slate-400 mt-1 font-medium tracking-tight">{inquiry.area}</div>
+                                        <div className="font-black text-slate-900 text-[19px]">{inquiry.customerName} 고객</div>
+                                        <div className="text-base text-slate-400 mt-1 font-bold tracking-tight">{inquiry.area}</div>
                                     </div>
                                 </div>
-                                <span className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full border ${inquiry.status === '대기중' ? 'bg-red-50 text-red-500 border-red-100' : 'bg-slate-50 text-slate-400 border-slate-200'}`}>
+                                <span className={`px-4 py-1.5 text-xs font-black uppercase tracking-widest rounded-full border ${inquiry.status === '대기중' ? 'bg-red-50 text-red-500 border-red-100' : 'bg-slate-50 text-slate-400 border-slate-200'}`}>
                                     {inquiry.status}
                                 </span>
                             </div>
                         ))}
                         {recentInquiries.length === 0 && (
-                            <div className="px-10 py-16 text-center text-slate-400 text-[11px] font-black uppercase tracking-[0.3em]">접수된 문의 데이터가 없습니다</div>
+                            <div className="px-10 py-16 text-center text-slate-400 text-sm font-black uppercase tracking-[0.3em]">접수된 문의 데이터가 없습니다</div>
                         )}
                     </div>
                 </div>
@@ -156,8 +156,8 @@ export default async function AdminDashboard() {
                 <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_50px_rgb(0,0,0,0.03)] overflow-hidden">
                     <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-transparent">
                         <div>
-                            <h2 className="text-xl font-black text-slate-900 tracking-tight">시공 실적 업데이트</h2>
-                            <p className="text-[11px] text-slate-400 font-black uppercase tracking-[0.2em] mt-1">최근 시공 사례 등록 현황</p>
+                            <h2 className="text-2xl font-black text-slate-900 tracking-tight">시공 실적 업데이트</h2>
+                            <p className="text-sm text-slate-400 font-bold uppercase tracking-[0.2em] mt-1">최근 시공 사례 등록 현황</p>
                         </div>
                         <Link href="/admin/portfolio" className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-cyan-600 hover:bg-cyan-50 transition-all group">
                             <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
@@ -174,13 +174,13 @@ export default async function AdminDashboard() {
                                     </div>
                                 )}
                                 <div>
-                                    <div className="font-bold text-slate-900 text-[17px] group-hover:text-cyan-600 transition-colors">{portfolio.title}</div>
-                                    <div className="text-sm text-slate-400 mt-1 font-medium tracking-tight italic tabular-nums">{portfolio.date}</div>
+                                    <div className="font-black text-slate-900 text-[19px] group-hover:text-cyan-600 transition-colors">{portfolio.title}</div>
+                                    <div className="text-base text-slate-400 mt-1 font-bold tracking-tight italic tabular-nums">{portfolio.date}</div>
                                 </div>
                             </div>
                         ))}
                         {recentPortfolios.length === 0 && (
-                            <div className="px-10 py-16 text-center text-slate-400 text-[11px] font-black uppercase tracking-[0.3em]">최근 등록된 시공 사례가 없습니다</div>
+                            <div className="px-10 py-16 text-center text-slate-400 text-sm font-black uppercase tracking-[0.3em]">최근 등록된 시공 사례가 없습니다</div>
                         )}
                     </div>
                 </div>

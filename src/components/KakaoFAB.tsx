@@ -15,17 +15,14 @@ export default function KakaoFAB() {
     const bottomClass = isDetailPage ? 'bottom-28' : 'bottom-6';
 
     return (
-        <div className={`fixed ${bottomClass} md:bottom-10 right-6 md:right-10 z-[70] flex flex-col items-end pointer-events-none transition-all duration-300`}>
-
-            {/* Tooltip */}
+        <div className={`fixed ${bottomClass} md:bottom-10 right-6 md:right-10 z-[70] flex flex-col items-end pointer-events-none transition-all duration-300`}>            {/* Tooltip */}
             <div className="relative mb-3">
                 <div className="bg-slate-800 text-white text-sm font-bold px-4 py-2 rounded-2xl shadow-lg border border-slate-700 pointer-events-auto cursor-pointer">
-                    빠른 견적 문의
+                    채널 상담
                 </div>
                 {/* Tooltip Tail */}
                 <div className="absolute -bottom-2 right-6 w-4 h-4 bg-slate-800 rotate-45 border-r border-b border-slate-700" />
             </div>
-
             {/* Button Wrapper */}
             <div className="relative flex items-center justify-center pointer-events-auto">
                 {/* Main FAB Link with Extremely Subtle Breathing Effect */}
