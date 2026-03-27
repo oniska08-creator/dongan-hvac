@@ -23,10 +23,16 @@ export async function uploadToSupabase(file: Buffer | Blob | File, bucketName: s
     buffer = file;
   }
 
+  const originalSize = buffer.length;
+
   const optimizedBuffer = await sharp(buffer)
     .webp({ quality: 80 }) // 80% 화질로 WebP 변환
     .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true }) // 최대 1200px 리사이징
     .toBuffer();
+
+  const optimizedSize = optimizedBuffer.length;
+  console.log(`[Image Optimization] Original: ${originalSize} bytes, Optimized: ${optimizedSize} bytes (${((1 - optimizedSize / originalSize) * 100).toFixed(2)}% reduction)`);
+
 
   // 2. Supabase Storage에 업로드
   const { data, error } = await supabaseAdmin.storage
