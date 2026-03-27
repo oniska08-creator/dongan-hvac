@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { processProductImages } from '@/lib/storage';
 
 export async function PUT(request: Request, context: { params: Promise<{ id: string }> | { id: string } }) {
     try {
@@ -13,6 +14,9 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
         const body = await request.json();
         const { title, clientName, area, solution, date, imageUrl, images } = body;
 
+        // 이미지 처리 (Base64 변환 지원)
+        const processed = await processProductImages({ imageUrl, images });
+
         const updatedPortfolio = await prisma.portfolio.update({
             where: { id: portfolioId },
             data: {
@@ -21,8 +25,8 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
                 area: area || '',
                 solution,
                 date,
-                imageUrl: imageUrl || null,
-                images: images || [],
+                imageUrl: processed.imageUrl || null,
+                images: processed.images || [],
             }
         });
 

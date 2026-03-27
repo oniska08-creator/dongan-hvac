@@ -1,5 +1,5 @@
-import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import { uploadToSupabase } from '@/lib/storage';
 
 export async function POST(request: Request) {
     try {
@@ -10,14 +10,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        const blob = await put(file.name, file, {
-            access: 'public',
-            addRandomSuffix: true,
-        });
+        // Supabase Storage로 업로드 (storage 유틸리티 사용)
+        const publicUrl = await uploadToSupabase(file);
 
-        return NextResponse.json(blob);
+        return NextResponse.json({ url: publicUrl });
     } catch (error) {
-        console.error('Blob Upload Error:', error);
-        return NextResponse.json({ error: 'Failed to upload to Vercel Blob' }, { status: 500 });
+        console.error('Supabase Upload Error:', error);
+        return NextResponse.json({ error: 'Failed to upload to Supabase Storage' }, { status: 500 });
     }
 }

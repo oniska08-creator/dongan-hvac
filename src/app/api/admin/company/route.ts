@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { processProductImages } from '@/lib/storage';
 
 export async function GET() {
     try {
@@ -57,6 +58,11 @@ export async function PUT(request: Request) {
             return NextResponse.json({ error: 'CompanyInfo model not found in DB client' }, { status: 500 });
         }
 
+        // 이미지 처리 (Base64 변환 지원)
+        const processed = await processProductImages({ 
+            imageUrl: companyInfo?.imageUrl 
+        });
+
         // Use prisma.companyInfo (camelCase) correctly
         await (prisma as any).companyInfo.upsert({
             where: { id: 1 },
@@ -67,7 +73,7 @@ export async function PUT(request: Request) {
                 contentTitle: companyInfo?.contentTitle,
                 content1: companyInfo?.content1,
                 content2: companyInfo?.content2,
-                imageUrl: companyInfo?.imageUrl,
+                imageUrl: processed.imageUrl || "/images/about/hvac_main.png",
                 history: history as any,
                 updatedAt: new Date()
             },
@@ -79,7 +85,7 @@ export async function PUT(request: Request) {
                 contentTitle: companyInfo?.contentTitle,
                 content1: companyInfo?.content1,
                 content2: companyInfo?.content2,
-                imageUrl: companyInfo?.imageUrl,
+                imageUrl: processed.imageUrl || "/images/about/hvac_main.png",
                 history: history as any
             }
         });

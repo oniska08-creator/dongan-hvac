@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { processProductImages } from '@/lib/storage';
 
 export async function GET() {
     try {
@@ -12,7 +13,7 @@ export async function GET() {
                 clientName: true,
                 area: true,
                 solution: true,
-                images: true,
+                images: true, // 목록에선 이미지를 제외할 수도 있지만 일단 유지 (URL이므로 부담 적음)
                 date: true,
                 imageUrl: true
             }
@@ -33,6 +34,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
+        // 이미지 처리 (Base64 변환 지원)
+        const processed = await processProductImages({ imageUrl, images });
+
         const newPortfolio = await prisma.portfolio.create({
             data: {
                 title,
@@ -40,8 +44,8 @@ export async function POST(request: Request) {
                 area: area || '',
                 solution,
                 date,
-                imageUrl: imageUrl || null,
-                images: images || []
+                imageUrl: processed.imageUrl || null,
+                images: processed.images || []
             }
         });
 

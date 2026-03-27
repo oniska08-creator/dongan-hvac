@@ -1,10 +1,21 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { processProductImages } from '@/lib/storage';
 
 export async function GET() {
     try {
         const products = await prisma.product.findMany({
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
+            // 목록 조회 시에는 필요한 필드만 (메모리 절약 및 전송량 최적화)
+            select: {
+                id: true,
+                name: true,
+                category: true,
+                features: true,
+                imageUrl: true,
+                isVisible: true,
+                createdAt: true,
+            }
         });
         return NextResponse.json(products);
     } catch (error) {
@@ -22,14 +33,17 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
+        // 이미지 처리 (Base64가 있으면 Storage에 업로드 후 URL로 치환)
+        const processed = await processProductImages({ imageUrl, images });
+
         const newProduct = await prisma.product.create({
             data: {
                 name,
                 category,
                 features,
                 description: description || "",
-                imageUrl: imageUrl || null,
-                images: images || [],
+                imageUrl: processed.imageUrl || null,
+                images: processed.images || [],
                 isVisible: isVisible !== undefined ? isVisible : true,
                 specs: specs || null,
             }
